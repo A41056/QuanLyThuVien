@@ -49,10 +49,7 @@ namespace QuanLyThuVien
         {
             if (userAccountDAL == null)
                 userAccountDAL = new UserAccountDAL();
-            BaseControl.Instance.runTaskWithCallBack(
-                loadData(),
-                ex => { MessageBox.Show("Error"); },
-                () => { return; });
+            BaseControl.Instance.runTask(loadData());
         }
         private async Task loadData()
         {
@@ -118,14 +115,8 @@ namespace QuanLyThuVien
                 MessageBox.Show(QuanLyThuVien.Resource.FillAllBlank);
             else
             {
-                BaseControl.Instance.runTaskWithCallBack(
-                    userAccountDAL.insertAccount(txtUsername.Text, txtPassword.Text, Convert.ToInt32(zRoleID)),
-                    ex => { MessageBox.Show("Error"); },
-                    () => { return; });
-                BaseControl.Instance.runTaskWithCallBack(
-                    loadData(),
-                    ex => { MessageBox.Show("Error"); },
-                    () => { return; });
+                BaseControl.Instance.runTask( userAccountDAL.insertAccount(txtUsername.Text, txtPassword.Text, Convert.ToInt32(zRoleID)));
+                BaseControl.Instance.runTask(loadData());
             }
         }
 
@@ -135,27 +126,15 @@ namespace QuanLyThuVien
                 MessageBox.Show(QuanLyThuVien.Resource.FillAllBlank);
             else
             {
-                BaseControl.Instance.runTaskWithCallBack(
-                    userAccountDAL.updateAccount(Convert.ToInt32(zID), txtUsername.Text, txtPassword.Text, Convert.ToInt32(zRoleID)),
-                    ex => { MessageBox.Show("Error"); },
-                    () => { return; });
-                BaseControl.Instance.runTaskWithCallBack(
-                    loadData(),
-                    ex => { MessageBox.Show("Error"); },
-                    () => { return; });
+                BaseControl.Instance.runTask( userAccountDAL.updateAccount(Convert.ToInt32(zID), txtUsername.Text, txtPassword.Text, Convert.ToInt32(zRoleID)));
+                BaseControl.Instance.runTask( loadData());
             }
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.runTaskWithCallBack(
-                userAccountDAL.deleteAccount(Convert.ToInt32(zID)),
-                ex => { MessageBox.Show("Error"); },
-                () => { return; });
-            BaseControl.Instance.runTaskWithCallBack(
-                loadData(),
-                ex => { MessageBox.Show("Error"); },
-                () => { return; });
+            BaseControl.Instance.runTask( userAccountDAL.deleteAccount(Convert.ToInt32(zID)));
+            BaseControl.Instance.runTask(loadData());
         }
 
         private void applyUIStrings()

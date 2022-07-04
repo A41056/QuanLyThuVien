@@ -36,10 +36,7 @@ namespace QuanLyThuVien
         {
             if (bookTypeDAL == null)
                 bookTypeDAL = new BookTypeDAL();
-            BaseControl.Instance.runTaskWithCallBack(
-                loadData(),
-                ex =>{MessageBox.Show("Error");},
-                () =>{return;});
+            BaseControl.Instance.runTask(loadData());
         }
         private async Task loadData()
         {
@@ -143,18 +140,12 @@ namespace QuanLyThuVien
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.runTaskWithCallBack(
-                addNew(),
-                ex =>{MessageBox.Show("Error");},
-                () =>{return;});
+            BaseControl.Instance.runTask(addNew());
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.runTaskWithCallBack(
-                edit(),
-                ex =>{ MessageBox.Show("Error");},
-                () =>{return;});
+            BaseControl.Instance.runTask(edit());
         }
 
     }

@@ -19,7 +19,8 @@ namespace QuanLyThuVien.DAL
             try
             {
                 return await Task.Run(() => DataProvider.Instance.executeQueryAsync(_zQuery));
-            }catch(Exception ex)
+            }
+            catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
                 return null;
@@ -44,7 +45,6 @@ namespace QuanLyThuVien.DAL
             string _zQuery = "dbo.UpdateAuthor @id , @name , @address , @email , @phone , @birth";
             try
             {
-
                 await Task.Run(
                     () => DataProvider.Instance.executeNonQueryAsync(_zQuery,
                     new object[] { id, pzName, pzAddress, pzEmail, pzPhone, pDtpBirth }));

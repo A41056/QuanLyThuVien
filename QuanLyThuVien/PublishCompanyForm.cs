@@ -55,10 +55,7 @@ namespace QuanLyThuVien
         {
             if (publishDAL == null)
                 publishDAL = new PublishDAL();
-            BaseControl.Instance.runTaskWithCallBack(
-                loadData(),
-                ex => { MessageBox.Show("Error"); },
-                () => { return; });
+            BaseControl.Instance.runTask( loadData());
         }
 
         private async Task loadData()
@@ -135,14 +132,9 @@ namespace QuanLyThuVien
                 int _nsdt;
                 if (int.TryParse(txtPhone.Text, out _nsdt))
                 {
-                    BaseControl.Instance.runTaskWithCallBack(
-                        publishDAL.insertPublisher(txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text),
-                        ex => { MessageBox.Show("Error"); },
-                        () => { return; });
-                    BaseControl.Instance.runTaskWithCallBack(
-                        loadData(),
-                        ex => { MessageBox.Show("Error"); },
-                        () => { return; });
+                    BaseControl.Instance.runTask(
+                        publishDAL.insertPublisher(txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text));
+                    BaseControl.Instance.runTask(loadData());
                 }
                 else
                 {
@@ -161,14 +153,9 @@ namespace QuanLyThuVien
                 if (int.TryParse(txtPhone.Text, out _sdt))
                 {
 
-                    BaseControl.Instance.runTaskWithCallBack(
-                        publishDAL.updatePublisher(Convert.ToInt32(zID), txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text),
-                        ex => { MessageBox.Show("Error"); },
-                        () => { return; });
-                    BaseControl.Instance.runTaskWithCallBack(
-                        loadData(),
-                        ex => { MessageBox.Show("Error"); },
-                        () => { return; });
+                    BaseControl.Instance.runTask(
+                        publishDAL.updatePublisher(Convert.ToInt32(zID), txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text));
+                    BaseControl.Instance.runTask(loadData());
                 }
                 else
                 {

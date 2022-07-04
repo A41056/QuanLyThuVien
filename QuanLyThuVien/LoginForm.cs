@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,7 +14,8 @@ namespace QuanLyThuVien
 {
     public partial class LoginForm : Form
     {
-        private LoginDAL loginDAL = new LoginDAL();
+        private LoginDAL _loginDAL = new LoginDAL();
+        public static CancellationTokenSource _tokenSource;
         public LoginForm()
         {
             InitializeComponent();
@@ -33,38 +35,73 @@ namespace QuanLyThuVien
             txtPassword.PasswordChar = chxShowPassword.Checked ? '\0' : '*';
         }
 
-        private void btnLogin_Click(object sender, EventArgs e) //async void không bắt được lỗi
+        private void btnLogin_Click(object sender, EventArgs e) // async void không bắt được lỗi
         {
-            BaseControl.Instance.runTaskWithCallBack(
-                loginAsync(txtUsername.Text, txtPassword.Text),
-                ex =>
+            btnLogin.Enabled = false;
+
+            if (_tokenSource == null)
+                _tokenSource = new CancellationTokenSource();
+
+            login(txtUsername.Text, txtPassword.Text).ContinueWith(
+                (_taskToContinue) => 
                 {
-                    MessageBox.Show("Run Task Error");
-                },
-                () =>
-                {
-                    return;
+                    if (_taskToContinue.IsFaulted)
+                    {
+                        MessageBox.Show(_taskToContinue.Exception.InnerException.Message);
+                    }
+                    else if (_taskToContinue.IsCanceled)
+                    {
+                        MessageBox.Show("Task is cancelled.");
+                    }
+                    else
+                    {
+                        if (_taskToContinue.Result)
+                        {
+                            if (InvokeRequired)
+                            {
+                                Invoke((MethodInvoker)(() => Hide()));
+                                var _mainFrm = new MainForm();
+                                _mainFrm.ShowDialog();
+                                _mainFrm.Dispose();
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show(QuanLyThuVien.Resource.CantLogin);
+                        }
+                    }
                 });
         }
-
-        private async Task loginAsync(string pzUsername, string pzPassword)
+        
+        private async Task<bool> login(string pzUsername, string pzPassword)
         {
-            if (await loginDAL.loginAsync(txtUsername.Text, txtPassword.Text))
-            {
-                Hide();
-
-                var _mainFrm = new MainForm();
-                _mainFrm.ShowDialog();
-                _mainFrm.Dispose();
-            }
-            else
-            {
-                MessageBox.Show(QuanLyThuVien.Resource.CantLogin);
-            }
+            return await _loginDAL.loginAsync(pzUsername, pzPassword, _tokenSource.Token) ? true : throw new Exception("Connection Error");
         }
 
         private void btnEsc_Click(object sender, EventArgs e)
         {
+            btnLogin.Enabled = true;
+            if (_tokenSource != null)
+            {
+                _tokenSource.Cancel();
+                _tokenSource.Dispose();
+                _tokenSource = null;
+            }
+            if (MessageBox.Show(QuanLyThuVien.Resource.ClosingNotification,
+                    QuanLyThuVien.Resource.Confirm, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                Application.Exit();
+        }
+
+        private void btnExit_Click(object sender, EventArgs e)
+        {
+            btnLogin.Enabled = true;
+
+            if (_tokenSource != null)
+            {
+                _tokenSource.Cancel();
+                _tokenSource.Dispose();
+                _tokenSource = null;
+            }
             if (MessageBox.Show(QuanLyThuVien.Resource.ClosingNotification,
                     QuanLyThuVien.Resource.Confirm, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 Application.Exit();
@@ -108,13 +145,6 @@ namespace QuanLyThuVien
             btnExit.Text = QuanLyThuVien.Resource.btnEsc;
             lblUsername.Text = QuanLyThuVien.Resource.lblUserName;
             lblPassword.Text = QuanLyThuVien.Resource.lblPassword;
-        }
-
-        private void btnExit_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show(QuanLyThuVien.Resource.ClosingNotification,
-                    QuanLyThuVien.Resource.Confirm, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                Application.Exit();
         }
 
         private void cbxFlags_DrawItem(object sender, DrawItemEventArgs e)

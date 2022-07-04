@@ -34,10 +34,7 @@ namespace QuanLyThuVien
         {
             if (readerDAL == null)
                 readerDAL = new ReaderDAL();
-            BaseControl.Instance.runTaskWithCallBack(
-                loadData(),
-                ex => { MessageBox.Show("Error"); },
-                () => { return; });
+            BaseControl.Instance.runTask( loadData());
         }
         private async Task loadData()
         {
@@ -135,14 +132,8 @@ namespace QuanLyThuVien
                 int _sdt;
                 if (int.TryParse(txtPhone.Text, out _sdt))
                 {
-                    BaseControl.Instance.runTaskWithCallBack(
-                        readerDAL.insertReader(txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text),
-                        ex => { MessageBox.Show("Error"); },
-                        () => { return; });
-                    BaseControl.Instance.runTaskWithCallBack(
-                        loadData(),
-                        ex => { MessageBox.Show("Error"); },
-                        () => { return; });
+                    BaseControl.Instance.runTask( readerDAL.insertReader(txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text));
+                    BaseControl.Instance.runTask( loadData());
                 }
                 else
                     MessageBox.Show(QuanLyThuVien.Resource.InvalidValue);
@@ -158,14 +149,8 @@ namespace QuanLyThuVien
                 int _sdt;
                 if (int.TryParse(txtPhone.Text, out _sdt))
                 {
-                    BaseControl.Instance.runTaskWithCallBack(
-                        readerDAL.updateReader(Convert.ToInt32(zID), txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text),
-                        ex => { MessageBox.Show("Error"); },
-                        () => { return; });
-                    BaseControl.Instance.runTaskWithCallBack(
-                        loadData(),
-                        ex => { MessageBox.Show("Error"); },
-                        () => { return; });
+                    BaseControl.Instance.runTask( readerDAL.updateReader(Convert.ToInt32(zID), txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text));
+                    BaseControl.Instance.runTask(loadData());
                 }
                 else
                     MessageBox.Show(QuanLyThuVien.Resource.InvalidValue);
