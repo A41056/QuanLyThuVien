@@ -17,7 +17,6 @@ namespace QuanLyThuVien
                 if (_instance == null) _instance = new BaseControl();
                 return _instance;
             }
-            //private set => instance = value;
         }
 
         private BaseControl() { }
@@ -44,20 +43,25 @@ namespace QuanLyThuVien
             }
         }
 
-        public async void runTaskWithCallBack(Task pTaskToRun, Action<Exception> pOnException, Action pOnComplete)
+        public void runTask(Task _pTask)
         {
-            try
-            {
-                await pTaskToRun;
-                pOnComplete();
-
-            }
-            catch (Exception ex)
-            {
-                pOnException(ex);
-            }
+            _pTask.ContinueWith(
+                (_taskToContinue) =>
+                {
+                    if (_taskToContinue.IsFaulted)
+                    {
+                        MessageBox.Show(_taskToContinue.Exception.Message);
+                    }
+                    else if (_taskToContinue.IsCanceled)
+                    {
+                        MessageBox.Show("Task is cancelled.");
+                    }
+                    else
+                    {
+                        return;
+                    }
+                });
         }
-
 
     }
 }

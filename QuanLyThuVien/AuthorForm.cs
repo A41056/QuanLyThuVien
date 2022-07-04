@@ -16,6 +16,9 @@ namespace QuanLyThuVien
 {
     public partial class AuthorForm : Form
     {
+        private string zID;
+        private int nIndex = 0;
+
         private AuthorDAL _authorDAL = null;
         public AuthorForm()
         {
@@ -28,9 +31,7 @@ namespace QuanLyThuVien
         {
             applyUIStrings();
         }
-
-        string zID;
-        int nIndex = 0;
+        
         private void dgvAuthor_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             nIndex = e.RowIndex;
@@ -56,7 +57,6 @@ namespace QuanLyThuVien
                 }
             }
         }
-
         
         private async Task edit()
         {
@@ -99,16 +99,7 @@ namespace QuanLyThuVien
         {
             if (_authorDAL == null)
                 _authorDAL = new AuthorDAL();
-            BaseControl.Instance.runTaskWithCallBack(
-                loadData(),
-                ex =>
-                {
-                    MessageBox.Show("Error");
-                },
-                () =>
-                {
-                    return;
-                });
+            BaseControl.Instance.runTask(loadData());
         }
 
         private void dgvAuthor_KeyDown(object sender, KeyEventArgs e)
@@ -171,30 +162,12 @@ namespace QuanLyThuVien
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.runTaskWithCallBack(
-                addNew(),
-                ex =>
-                {
-                    MessageBox.Show("Run Task Error");
-                },
-                () =>
-                {
-                    return;
-                });
+            BaseControl.Instance.runTask(addNew());
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.runTaskWithCallBack(
-                edit(),
-                ex =>
-                {
-                    MessageBox.Show("Run Task Error");
-                },
-                () =>
-                {
-                    return;
-                });
+            BaseControl.Instance.runTask(edit());
         }
 
     }

@@ -34,10 +34,7 @@ namespace QuanLyThuVien
         {
             if (borrowBookDAL == null)
                 borrowBookDAL = new BorrowBookDAL();
-            BaseControl.Instance.runTaskWithCallBack(
-                loadData(),
-                ex =>{ MessageBox.Show("Error");},
-                () =>{return;});
+            BaseControl.Instance.runTask(loadData());
         }
 
         private async Task loadData()
@@ -114,14 +111,8 @@ namespace QuanLyThuVien
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.runTaskWithCallBack(
-                borrowBookDAL.deleteBorrowBook(Convert.ToInt32(zMaPhieuMuon)),
-                ex => { MessageBox.Show("Error"); },
-                () => { return; });
-            BaseControl.Instance.runTaskWithCallBack(
-                loadData(),
-                ex => { MessageBox.Show("Error"); },
-                () => { return; });
+            BaseControl.Instance.runTask(borrowBookDAL.deleteBorrowBook(Convert.ToInt32(zMaPhieuMuon));
+            BaseControl.Instance.runTask( loadData());
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
@@ -130,14 +121,8 @@ namespace QuanLyThuVien
                 MessageBox.Show(QuanLyThuVien.Resource.FillAllBlank);
             else
             {
-                BaseControl.Instance.runTaskWithCallBack(
-                borrowBookDAL.updateBorrowBook(Convert.ToInt32(zMaPhieuMuon), txtBookID.Text, Convert.ToInt32(txtAuthorID.Text), Convert.ToInt32(txtReaderID.Text), Convert.ToInt32(txtAmount.Text), DateTime.Now, dtpReturnDate.Value),
-                ex => { MessageBox.Show("Error"); },
-                () => { return; });
-                BaseControl.Instance.runTaskWithCallBack(
-                loadData(),
-                ex => { MessageBox.Show("Error"); },
-                () => { return; });
+                BaseControl.Instance.runTask(borrowBookDAL.updateBorrowBook(Convert.ToInt32(zMaPhieuMuon), txtBookID.Text, Convert.ToInt32(txtAuthorID.Text), Convert.ToInt32(txtReaderID.Text), Convert.ToInt32(txtAmount.Text), DateTime.Now, dtpReturnDate.Value));
+                BaseControl.Instance.runTask(loadData());
             }
         }
 
@@ -147,14 +132,9 @@ namespace QuanLyThuVien
                 MessageBox.Show(QuanLyThuVien.Resource.FillAllBlank);
             else
             {
-                BaseControl.Instance.runTaskWithCallBack(
-                borrowBookDAL.insertBorrowBook(txtBookID.Text, Convert.ToInt32(txtAuthorID.Text), Convert.ToInt32(txtReaderID.Text), Convert.ToInt32(txtAmount.Text), DateTime.Now, dtpReturnDate.Value),
-                ex => { MessageBox.Show("Error"); },
-                () => { return; });
-                BaseControl.Instance.runTaskWithCallBack(
-                loadData(),
-                ex => { MessageBox.Show("Error"); },
-                () => { return; });
+                BaseControl.Instance.runTask(
+                borrowBookDAL.insertBorrowBook(txtBookID.Text, Convert.ToInt32(txtAuthorID.Text), Convert.ToInt32(txtReaderID.Text), Convert.ToInt32(txtAmount.Text), DateTime.Now, dtpReturnDate.Value));
+                BaseControl.Instance.runTask(loadData());
             }
         }
 

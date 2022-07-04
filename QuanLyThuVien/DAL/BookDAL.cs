@@ -21,6 +21,7 @@ namespace QuanLyThuVien.DAL
             }catch(Exception ex)
             {
                 MessageBox.Show(ex.Message);
+                return null;
             }
         }
 

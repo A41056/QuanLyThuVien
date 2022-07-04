@@ -208,89 +208,35 @@ namespace QuanLyThuVien
         private void cbPublisher_Click(object sender, EventArgs e)
         {
             cbPublisher.DataSource = null;
-            BaseControl.Instance.runTaskWithCallBack(
-                loadPublishCompany(),
-                ex =>
-                {
-                    MessageBox.Show("Run Task Error");
-                },
-                () =>
-                {
-                    return;
-                });
+            BaseControl.Instance.runTask(loadPublishCompany());
         }
 
         private void cbAuthor_Click(object sender, EventArgs e)
         {
             cbAuthor.DataSource = null;
-            BaseControl.Instance.runTaskWithCallBack(
-                loadAuthor(),
-                ex =>
-                {
-                    MessageBox.Show("Run Task Error");
-                },
-                () =>
-                {
-                    return;
-                });
+            BaseControl.Instance.runTask(loadAuthor());
         }
 
         private void cbBookType_Click(object sender, EventArgs e)
         {
             cbBookType.DataSource = null;
-            BaseControl.Instance.runTaskWithCallBack(
-                loadTypeBook(),
-                ex =>
-                {
-                    MessageBox.Show("Run Task Error");
-                },
-                () =>
-                {
-                    return;
-                });
+            BaseControl.Instance.runTask(loadTypeBook());
         }
 
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.runTaskWithCallBack(
-                addNew(),
-                ex =>
-                {
-                    MessageBox.Show("Run Task Error");
-                },
-                () =>
-                {
-                    return;
-                });
+            BaseControl.Instance.runTask(addNew());
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.runTaskWithCallBack(
-                edit(),
-                ex =>
-                {
-                    MessageBox.Show("Run Task Error");
-                },
-                () =>
-                {
-                    return;
-                });
+            BaseControl.Instance.runTask(edit());
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.runTaskWithCallBack(
-                delete(),
-                ex =>
-                {
-                    MessageBox.Show("Run Task Error");
-                },
-                () =>
-                {
-                    return;
-                });
+            BaseControl.Instance.runTask(delete());
         }
 
         private void cbPublisher_SelectionChangeCommitted(object sender, EventArgs e)
