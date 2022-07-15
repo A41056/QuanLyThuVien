@@ -1,7 +1,7 @@
 ﻿
 namespace QuanLyThuVien
 {
-    partial class AuthorForm
+    partial class FormBase
     {
         /// <summary>
         /// Required designer variable.
@@ -45,9 +45,14 @@ namespace QuanLyThuVien
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.txtAddress = new System.Windows.Forms.TextBox();
             this.panelContainer = new System.Windows.Forms.TableLayoutPanel();
-            this.dgvAuthor = new System.Windows.Forms.DataGridView();
+            this.dgvBase = new System.Windows.Forms.DataGridView();
+            this.childToolStrip = new System.Windows.Forms.ToolStrip();
+            this.btnNew = new System.Windows.Forms.ToolStripButton();
+            this.btnEdit = new System.Windows.Forms.ToolStripButton();
+            this.btnCancel = new System.Windows.Forms.ToolStripButton();
             this.panelContainer.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvAuthor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvBase)).BeginInit();
+            this.childToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblDateofBirth
@@ -188,7 +193,7 @@ namespace QuanLyThuVien
             this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.panelContainer.Controls.Add(this.dgvAuthor, 1, 3);
+            this.panelContainer.Controls.Add(this.dgvBase, 1, 3);
             this.panelContainer.Controls.Add(this.lblID, 1, 1);
             this.panelContainer.Controls.Add(this.txtID, 1, 2);
             this.panelContainer.Controls.Add(this.lblName, 2, 1);
@@ -212,16 +217,16 @@ namespace QuanLyThuVien
             this.panelContainer.Size = new System.Drawing.Size(1409, 707);
             this.panelContainer.TabIndex = 47;
             // 
-            // dgvAuthor
+            // dgvBase
             // 
-            this.dgvAuthor.AllowUserToAddRows = false;
-            this.dgvAuthor.AllowUserToDeleteRows = false;
-            this.dgvAuthor.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.dgvBase.AllowUserToAddRows = false;
+            this.dgvBase.AllowUserToDeleteRows = false;
+            this.dgvBase.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvAuthor.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dgvAuthor.BackgroundColor = System.Drawing.Color.White;
-            this.dgvAuthor.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+            this.dgvBase.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dgvBase.BackgroundColor = System.Drawing.Color.White;
+            this.dgvBase.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(204)))), ((int)(((byte)(145)))));
             dataGridViewCellStyle1.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -229,9 +234,9 @@ namespace QuanLyThuVien
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(62)))), ((int)(((byte)(220)))), ((int)(((byte)(140)))));
             dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvAuthor.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.dgvAuthor.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.panelContainer.SetColumnSpan(this.dgvAuthor, 8);
+            this.dgvBase.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dgvBase.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.panelContainer.SetColumnSpan(this.dgvBase, 8);
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
             dataGridViewCellStyle2.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -239,11 +244,11 @@ namespace QuanLyThuVien
             dataGridViewCellStyle2.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(204)))), ((int)(((byte)(145)))));
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvAuthor.DefaultCellStyle = dataGridViewCellStyle2;
-            this.dgvAuthor.EnableHeadersVisualStyles = false;
-            this.dgvAuthor.Location = new System.Drawing.Point(5, 88);
-            this.dgvAuthor.Margin = new System.Windows.Forms.Padding(5);
-            this.dgvAuthor.Name = "dgvAuthor";
+            this.dgvBase.DefaultCellStyle = dataGridViewCellStyle2;
+            this.dgvBase.EnableHeadersVisualStyles = false;
+            this.dgvBase.Location = new System.Drawing.Point(5, 88);
+            this.dgvBase.Margin = new System.Windows.Forms.Padding(5);
+            this.dgvBase.Name = "dgvBase";
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -251,30 +256,76 @@ namespace QuanLyThuVien
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(220)))), ((int)(((byte)(145)))));
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvAuthor.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            this.dgvAuthor.RowHeadersVisible = false;
-            this.dgvAuthor.RowHeadersWidth = 51;
-            this.dgvAuthor.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dgvAuthor.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dgvAuthor.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGray;
-            this.dgvAuthor.RowTemplate.Height = 24;
-            this.dgvAuthor.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvAuthor.Size = new System.Drawing.Size(1399, 614);
-            this.dgvAuthor.TabIndex = 48;
+            this.dgvBase.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            this.dgvBase.RowHeadersVisible = false;
+            this.dgvBase.RowHeadersWidth = 51;
+            this.dgvBase.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dgvBase.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.dgvBase.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.LightGray;
+            this.dgvBase.RowTemplate.Height = 24;
+            this.dgvBase.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dgvBase.Size = new System.Drawing.Size(1399, 614);
+            this.dgvBase.TabIndex = 48;
             // 
-            // AuthorForm
+            // childToolStrip
+            // 
+            this.childToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.childToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnNew,
+            this.btnEdit,
+            this.btnCancel});
+            this.childToolStrip.Location = new System.Drawing.Point(0, 0);
+            this.childToolStrip.Name = "childToolStrip";
+            this.childToolStrip.Size = new System.Drawing.Size(1409, 27);
+            this.childToolStrip.TabIndex = 49;
+            this.childToolStrip.Text = "toolStrip1";
+            // 
+            // btnNew
+            // 
+            this.btnNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnNew.Image = global::QuanLyThuVien.Properties.Resources.add1;
+            this.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnNew.Name = "btnNew";
+            this.btnNew.Size = new System.Drawing.Size(29, 24);
+            this.btnNew.Text = "toolStripButton1";
+            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
+            // 
+            // btnEdit
+            // 
+            this.btnEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnEdit.Image = global::QuanLyThuVien.Properties.Resources.edit2;
+            this.btnEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnEdit.Name = "btnEdit";
+            this.btnEdit.Size = new System.Drawing.Size(29, 24);
+            this.btnEdit.Text = "toolStripButton1";
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnCancel.Image = global::QuanLyThuVien.Properties.Resources.cancel;
+            this.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(29, 24);
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // FormBase
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1409, 707);
+            this.Controls.Add(this.childToolStrip);
             this.Controls.Add(this.panelContainer);
-            this.Name = "AuthorForm";
-            this.Load += new System.EventHandler(this.AuthorForm_Load);
-            this.Controls.SetChildIndex(this.panelContainer, 0);
+            this.Name = "FormBase";
+            this.Text = "TacGiaForm";
+            this.Load += new System.EventHandler(this.FormBase_Load);
             this.panelContainer.ResumeLayout(false);
             this.panelContainer.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvAuthor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvBase)).EndInit();
+            this.childToolStrip.ResumeLayout(false);
+            this.childToolStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -294,6 +345,10 @@ namespace QuanLyThuVien
         private System.Windows.Forms.TextBox txtEmail;
         private System.Windows.Forms.TextBox txtAddress;
         private System.Windows.Forms.TableLayoutPanel panelContainer;
-        private System.Windows.Forms.DataGridView dgvAuthor;
+        private System.Windows.Forms.DataGridView dgvBase;
+        private System.Windows.Forms.ToolStrip childToolStrip;
+        private System.Windows.Forms.ToolStripButton btnNew;
+        private System.Windows.Forms.ToolStripButton btnEdit;
+        private System.Windows.Forms.ToolStripButton btnCancel;
     }
 }

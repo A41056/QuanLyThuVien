@@ -32,6 +32,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.AspNetCore.Authentication.Abstractions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Authentication.Abstractions.2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.Abstractions.dll</HintPath>
@@ -167,7 +170,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseControl.cs" />
+    <Compile Include="DAL\BaseDAL.cs" />
+    <Compile Include="FormBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FormBase.Designer.cs">
+      <DependentUpon>FormBase.cs</DependentUpon>
+    </Compile>
     <Compile Include="DAL\AuthorDAL.cs" />
     <Compile Include="DAL\BookDAL.cs" />
     <Compile Include="DAL\BookTypeDAL.cs" />
@@ -175,6 +184,7 @@
     <Compile Include="DAL\LoginDAL.cs" />
     <Compile Include="DAL\PublishDAL.cs" />
     <Compile Include="DAL\ReaderDAL.cs" />
+    <Compile Include="DAL\ReportDAL.cs" />
     <Compile Include="DAL\UserAccountDAL.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -254,6 +264,9 @@
     <Compile Include="ReportForm.Designer.cs">
       <DependentUpon>ReportForm.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="FormBase.resx">
+      <DependentUpon>FormBase.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="ReaderForm.resx">
       <DependentUpon>ReaderForm.cs</DependentUpon>
@@ -298,6 +311,7 @@
     <EmbeddedResource Include="ReportForm.resx">
       <DependentUpon>ReportForm.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -408,6 +422,7 @@
     <Content Include="Resources\borrow.png" />
     <None Include="Resources\borrow3.png" />
     <None Include="Resources\comi.png" />
+    <None Include="Resources\cancel.png" />
     <Content Include="Resources\delete.png" />
     <None Include="Resources\delete2.png" />
     <None Include="Resources\delete3.png" />

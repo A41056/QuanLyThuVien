@@ -47,6 +47,7 @@ namespace QuanLyThuVien
             this.btnNew = new System.Windows.Forms.ToolStripButton();
             this.btnEdit = new System.Windows.Forms.ToolStripButton();
             this.btnExport = new System.Windows.Forms.ToolStripButton();
+            this.btnCancel = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dgvPublisher)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.childToolStrip.SuspendLayout();
@@ -120,8 +121,6 @@ namespace QuanLyThuVien
             this.dgvPublisher.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvPublisher.Size = new System.Drawing.Size(1403, 844);
             this.dgvPublisher.TabIndex = 6;
-            this.dgvPublisher.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvPublisher_CellClick);
-            this.dgvPublisher.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvPublisher_KeyDown);
             // 
             // lblPhone
             // 
@@ -231,7 +230,8 @@ namespace QuanLyThuVien
             this.childToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnNew,
             this.btnEdit,
-            this.btnExport});
+            this.btnExport,
+            this.btnCancel});
             this.childToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.childToolStrip.Location = new System.Drawing.Point(0, 0);
             this.childToolStrip.Name = "childToolStrip";
@@ -268,6 +268,16 @@ namespace QuanLyThuVien
             this.btnExport.Size = new System.Drawing.Size(29, 24);
             this.btnExport.Text = "toolStripButton3";
             this.btnExport.Click += new System.EventHandler(this.btnExcel_Click);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnCancel.Image = global::QuanLyThuVien.Properties.Resources.cancel;
+            this.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(29, 24);
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // PublishCompanyForm
             // 
@@ -308,5 +318,6 @@ namespace QuanLyThuVien
         private System.Windows.Forms.ToolStripButton btnNew;
         private System.Windows.Forms.ToolStripButton btnEdit;
         private System.Windows.Forms.ToolStripButton btnExport;
+        private System.Windows.Forms.ToolStripButton btnCancel;
     }
 }

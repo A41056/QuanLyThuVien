@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -14,7 +15,9 @@ namespace QuanLyThuVien
 {
     public partial class BorrowForm : Form
     {
-        private BorrowBookDAL borrowBookDAL;
+        private BorrowBookDAL borrowBookDAL = null;
+        private CancellationTokenSource _ct = null;
+
         public BorrowForm()
         {
             InitializeComponent();
@@ -27,78 +30,56 @@ namespace QuanLyThuVien
             applyUIStrings();
         }
 
-        string zMaPhieuMuon, zMaThongTin;
-        int nIndex;
-
         private void BorrowForm_Load(object sender, EventArgs e)
         {
             if (borrowBookDAL == null)
                 borrowBookDAL = new BorrowBookDAL();
-            BaseControl.Instance.runTask(loadData());
+
+            loadData().ContinueWith((t) => 
+            {
+                if (InvokeRequired)
+                {
+                    Invoke((MethodInvoker)(() =>
+                    {
+                        bindingData();
+                        applyUIStrings();
+                    }));
+                }
+                else
+                {
+                    bindingData();
+                    applyUIStrings();
+                }
+            });
         }
 
         private async Task loadData()
         {
             dgvBorrow.DataSource = await borrowBookDAL.loadData();
-            
-            applyUIStrings();
         }
         
-        private void dgvBorrow_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            nIndex = e.RowIndex;
-            if(nIndex >= 0)
-                bindingData(nIndex);
-        }
-
-
-        private void dgvBorrow_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Down)
-            {
-                ++nIndex;
-                if (nIndex >= 0 && nIndex <= dgvBorrow.Rows.Count - 1)
-                {
-                    bindingData(nIndex);
-                }
-                else if (nIndex > dgvBorrow.Rows.Count - 1)
-                {
-                    nIndex = dgvBorrow.Rows.Count - 1;
-                    bindingData(nIndex);
-                }
-            }
-            else if (e.KeyCode == Keys.Up)
-            {
-                --nIndex;
-                if (nIndex >= 0 && nIndex <= dgvBorrow.Rows.Count - 1)
-                {
-                    bindingData(nIndex);
-                }
-                else
-                {
-                    nIndex = 0;
-                    bindingData(nIndex);
-                }
-            }
-        }
-
         private void btnExcel_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.exportToExcel(dgvBorrow);
+            //BaseControl.Instance.exportToExcel(dgvBorrow);
         }
 
-        private void bindingData(int pnIndex)
+        private void bindingData()
         {
-            DataGridViewRow row = dgvBorrow.Rows[pnIndex];
-            txtID.Text = row.Cells[0].Value.ToString();
-            zMaPhieuMuon = txtID.Text;
-            txtTicketDetailsID.Text = row.Cells[1].Value.ToString();
-            zMaThongTin = txtTicketDetailsID.Text;
-            txtBookID.Text = row.Cells[2].Value.ToString();
-            txtAuthorID.Text = row.Cells[3].Value.ToString();
-            txtReaderID.Text = row.Cells[4].Value.ToString();
-            txtAmount.Text = row.Cells[5].Value.ToString();
-            dtpReturnDate.Value = Convert.ToDateTime(row.Cells[6].Value.ToString());
+            txtID.DataBindings.Clear();
+            txtBookID.DataBindings.Clear();
+            txtReaderID.DataBindings.Clear();
+            txtAuthorID.DataBindings.Clear();
+            txtTicketDetailsID.DataBindings.Clear();
+            txtAmount.DataBindings.Clear();
+            dtpReturnDate.DataBindings.Clear();
+
+            txtID.DataBindings.Add("Text", (dgvBorrow.DataSource as DataTable), "ID");
+            txtBookID.DataBindings.Add("Text", (dgvBorrow.DataSource as DataTable), "BookCode");
+            txtAuthorID.DataBindings.Add("Text", (dgvBorrow.DataSource as DataTable), "IDAuthor");
+            txtReaderID.DataBindings.Add("Text", (dgvBorrow.DataSource as DataTable), "IDReader");
+            txtTicketDetailsID.DataBindings.Add("Text", (dgvBorrow.DataSource as DataTable), "IDTicket");
+            txtAmount.DataBindings.Add("Text", (dgvBorrow.DataSource as DataTable), "Amount");
+            dtpReturnDate.DataBindings.Add("Text", (dgvBorrow.DataSource as DataTable), "ReturnDate");
         }
 
         private bool checkValid()
@@ -111,31 +92,56 @@ namespace QuanLyThuVien
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.runTask(borrowBookDAL.deleteBorrowBook(Convert.ToInt32(zMaPhieuMuon));
-            BaseControl.Instance.runTask( loadData());
+            if (_ct == null)
+                _ct = new CancellationTokenSource();
+
+            borrowBookDAL.deleteBorrowBook(Convert.ToInt32(txtID.Text), _ct.Token).ContinueWith((t) => 
+            { 
+                loadData();
+                _ct.Dispose();
+                _ct = null;
+            });
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
             if (!checkValid())
+            {
                 MessageBox.Show(QuanLyThuVien.Resource.FillAllBlank);
+            }
             else
             {
-                BaseControl.Instance.runTask(borrowBookDAL.updateBorrowBook(Convert.ToInt32(zMaPhieuMuon), txtBookID.Text, Convert.ToInt32(txtAuthorID.Text), Convert.ToInt32(txtReaderID.Text), Convert.ToInt32(txtAmount.Text), DateTime.Now, dtpReturnDate.Value));
-                BaseControl.Instance.runTask(loadData());
+                if (_ct == null)
+                    _ct = new CancellationTokenSource();
+
+                borrowBookDAL.updateBorrowBook(Convert.ToInt32(txtID.Text), txtBookID.Text, Convert.ToInt32(txtAuthorID.Text), Convert.ToInt32(txtReaderID.Text), Convert.ToInt32(txtAmount.Text), DateTime.Now, dtpReturnDate.Value,_ct.Token).ContinueWith((t) =>
+                {
+                    loadData();
+                    _ct.Dispose();
+                    _ct = null;
+                });
             }
         }
 
         private void btnNew_Click(object sender, EventArgs e)
         {
             if (!checkValid())
+            {
                 MessageBox.Show(QuanLyThuVien.Resource.FillAllBlank);
+            }
             else
             {
-                BaseControl.Instance.runTask(
-                borrowBookDAL.insertBorrowBook(txtBookID.Text, Convert.ToInt32(txtAuthorID.Text), Convert.ToInt32(txtReaderID.Text), Convert.ToInt32(txtAmount.Text), DateTime.Now, dtpReturnDate.Value));
-                BaseControl.Instance.runTask(loadData());
+                if (_ct == null)
+                    _ct = new CancellationTokenSource();
+
+                borrowBookDAL.insertBorrowBook(txtBookID.Text, Convert.ToInt32(txtAuthorID.Text), Convert.ToInt32(txtReaderID.Text), Convert.ToInt32(txtAmount.Text), DateTime.Now, dtpReturnDate.Value,_ct.Token).ContinueWith((t) =>
+                {
+                    loadData();
+                    _ct.Dispose();
+                    _ct = null;
+                });
             }
+
         }
 
         private void applyUIStrings()
@@ -158,12 +164,16 @@ namespace QuanLyThuVien
                 dgvBorrow.Columns[5].HeaderText = QuanLyThuVien.Resource.lblAmout;
                 dgvBorrow.Columns[6].HeaderText = QuanLyThuVien.Resource.lblReturnDate;
             }
-
-            btnNew.Text = QuanLyThuVien.Resource.btnNew;
-            btnEdit.Text = QuanLyThuVien.Resource.btnEdit;
-            btnDelete.Text = QuanLyThuVien.Resource.btnDelete;
         }
 
-
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            if (_ct != null)
+            {
+                _ct.Cancel();
+                _ct.Dispose();
+                _ct = null;
+            }
+        }
     }
 }

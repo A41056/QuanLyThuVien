@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -25,90 +26,65 @@ namespace QuanLyThuVien
 
         public DataProvider() { }
 
-        private const string SqlConnection = @"Data Source=DESKTOP-P2A4PIM\SQLEXPRESS;Initial Catalog=LibraryManagement;Integrated Security=True";
+        private const string SqlConnection = @"Data Source=DESKTOP-P2A4PIM\SQLEXPRESS;Initial Catalog=LibraryManagement;Integrated Security=True;Connection Timeout=30";
+
 
         public async Task<DataTable> executeQueryAsync(string pzQuery, object[] pParameter = null)
         {
             DataTable _data = null;
-           
+
             using (SqlConnection _connection = new SqlConnection(SqlConnection))
             using (SqlCommand _cmd = _connection.CreateCommand())
             {
                 _cmd.CommandText = pzQuery;
+                await _cmd.Connection.OpenAsync();
+
                 try
                 {
-                    await _cmd.Connection.OpenAsync();
+                    addParameter(pzQuery, pParameter, _cmd);
+                    SqlDataAdapter _adapter = new SqlDataAdapter(_cmd);
 
                     try
                     {
-                        addParameter(pzQuery, pParameter, _cmd);
-                        SqlDataAdapter _adapter = new SqlDataAdapter(_cmd);
-
-                        try
-                        {
-                            _data = new DataTable();
-                            await Task.Run(() => _adapter.Fill(_data)); 
-                        }
-                        finally
-                        {
-                            _adapter.Dispose();
-                        }
+                        _data = new DataTable();
+                        await Task.Run(() => _adapter.Fill(_data));
                     }
                     finally
                     {
-                        if (_cmd.Connection != null && _cmd.Connection.State != ConnectionState.Closed)
-                            _connection.Close();
+                        _adapter.Dispose();
                     }
                 }
-                catch
+                finally
                 {
-                    MessageBox.Show(QuanLyThuVien.Resource.OpenConnectionError);
+                    if (_cmd.Connection != null && _cmd.Connection.State != ConnectionState.Closed)
+                        _cmd.Connection.Close();
                 }
             }
             return _data;
         }
-        public async Task<DataTable> executeQueryAsync(string pzQuery,CancellationToken pCancellationToken, object[] pParameter = null)
-        {
-            DataTable _data = null;
 
+        public async Task<bool> executeQueryAsync(string pzQuery, CancellationToken pCancellationToken, object[] pParameter = null)
+        {
             using (SqlConnection _connection = new SqlConnection(SqlConnection))
             using (SqlCommand _cmd = _connection.CreateCommand())
             {
                 _cmd.CommandText = pzQuery;
+
+                await _cmd.Connection.OpenAsync(pCancellationToken);
+
                 try
                 {
-                    await _cmd.Connection.OpenAsync(pCancellationToken);
+                    addParameter(pzQuery, pParameter, _cmd);
 
-                    if (pCancellationToken.IsCancellationRequested)
-                        MessageBox.Show("CANCELLED");
-
-                    try
-                    {
-                        addParameter(pzQuery, pParameter, _cmd);
-                        SqlDataAdapter _adapter = new SqlDataAdapter(_cmd);
-
-                        try
-                        {
-                            _data = new DataTable();
-                            await Task.Run(() => _adapter.Fill(_data));
-                        }
-                        finally
-                        {
-                            _adapter.Dispose();
-                        }
-                    }
-                    finally
-                    {
-                        if (_cmd.Connection != null && _cmd.Connection.State != ConnectionState.Closed)
-                            _connection.Close();
-                    }
+                    using (var _dataReader = await _cmd.ExecuteReaderAsync(pCancellationToken))
+                        return _dataReader.HasRows;
                 }
-                catch
+                finally
                 {
-                    MessageBox.Show(QuanLyThuVien.Resource.OpenConnectionError);
+                    if (_cmd.Connection != null && _cmd.Connection.State != ConnectionState.Closed)
+                        _cmd.Connection.Close();
                 }
             }
-            return _data;
         }
 
         public async Task<int> executeNonQueryAsync(string pzQuery, object[] pParameter = null)
@@ -133,6 +109,28 @@ namespace QuanLyThuVien
             return _nData;
         }
 
+        public async Task<int> executeNonQueryAsync(string pzQuery, CancellationToken pCancellationToken, object[] pParameter = null)
+        {
+            int _nData = 0;
+            using (var _connection = new SqlConnection(SqlConnection))
+            using (var _cmd = _connection.CreateCommand())
+            {
+                _cmd.CommandText = pzQuery;
+                await _connection.OpenAsync(pCancellationToken);
+                try
+                {
+                    addParameter(pzQuery, pParameter, _cmd);
+                    _nData = await _cmd.ExecuteNonQueryAsync(pCancellationToken);
+                }
+                finally
+                {
+                    if (_cmd.Connection != null && _cmd.Connection.State != ConnectionState.Closed)
+                        _cmd.Connection.Close();
+                }
+            }
+            return _nData;
+        }
+
         public async Task<object> executeScalar(string pzQuery, object[] pParameter = null)
         {
             object _data = new object();
@@ -145,12 +143,12 @@ namespace QuanLyThuVien
                 try
                 {
                     addParameter(pzQuery, pParameter, _cmd);
-                    _data = await Task.Run(() => _cmd.ExecuteScalarAsync());
+                    _data = await _cmd.ExecuteScalarAsync();
                 }
                 finally
                 {
                     if (_cmd.Connection != null && _cmd.Connection.State != ConnectionState.Closed)
-                        _connection.Close();
+                        _cmd.Connection.Close();
                 }
             }
             return _data;
@@ -160,15 +158,11 @@ namespace QuanLyThuVien
         {
             if (pParameter != null)
             {
-                string[] _zListParameter = pzQuery.Split(' ');
-                int i = 0;
-                foreach (string _zItem in _zListParameter)
+                string[] _zListParameter = pzQuery.Split( new char[] { ' ', ',' }, StringSplitOptions.RemoveEmptyEntries);
+                for (int _i = 0; _i < _zListParameter.Length; _i++)
                 {
-                    if (_zItem.Contains("@"))
-                    {
-                        pCommand.Parameters.AddWithValue(_zItem, pParameter[i]);
-                        ++i;
-                    }
+                    if (_zListParameter[_i].Contains("@"))
+                        pCommand.Parameters.AddWithValue(_zListParameter[_i], pParameter[_i - 1]);
                 }
             }
         }

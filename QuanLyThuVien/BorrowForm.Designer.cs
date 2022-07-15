@@ -52,6 +52,7 @@ namespace QuanLyThuVien
             this.btnEdit = new System.Windows.Forms.ToolStripButton();
             this.btnDelete = new System.Windows.Forms.ToolStripButton();
             this.btnExport = new System.Windows.Forms.ToolStripButton();
+            this.btnCancel = new System.Windows.Forms.ToolStripButton();
             this.tableLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBorrow)).BeginInit();
             this.childToolStrip.SuspendLayout();
@@ -259,8 +260,6 @@ namespace QuanLyThuVien
             this.dgvBorrow.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvBorrow.Size = new System.Drawing.Size(1403, 844);
             this.dgvBorrow.TabIndex = 7;
-            this.dgvBorrow.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvBorrow_CellClick);
-            this.dgvBorrow.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvBorrow_KeyDown);
             // 
             // lblAuthorID
             // 
@@ -288,7 +287,8 @@ namespace QuanLyThuVien
             this.btnNew,
             this.btnEdit,
             this.btnDelete,
-            this.btnExport});
+            this.btnExport,
+            this.btnCancel});
             this.childToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.childToolStrip.Location = new System.Drawing.Point(0, 0);
             this.childToolStrip.Name = "childToolStrip";
@@ -336,6 +336,16 @@ namespace QuanLyThuVien
             this.btnExport.Text = "toolStripButton2";
             this.btnExport.Click += new System.EventHandler(this.btnExcel_Click);
             // 
+            // btnCancel
+            // 
+            this.btnCancel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnCancel.Image = global::QuanLyThuVien.Properties.Resources.cancel;
+            this.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(29, 24);
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // BorrowForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -379,5 +389,6 @@ namespace QuanLyThuVien
         private System.Windows.Forms.Label lblAuthorID;
         private System.Windows.Forms.TextBox txtAuthorID;
         private System.Windows.Forms.DataGridView dgvBorrow;
+        private System.Windows.Forms.ToolStripButton btnCancel;
     }
 }

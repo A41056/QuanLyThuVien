@@ -135,6 +135,9 @@
   <data name="btnBorrow" xml:space="preserve">
     <value>Mượn sách</value>
   </data>
+  <data name="btnCancel" xml:space="preserve">
+    <value>Hủy</value>
+  </data>
   <data name="btnDelete" xml:space="preserve">
     <value>Xóa</value>
   </data>
@@ -152,6 +155,12 @@
   </data>
   <data name="btnNew" xml:space="preserve">
     <value>Thêm</value>
+  </data>
+  <data name="btnNext" xml:space="preserve">
+    <value>Trang sau</value>
+  </data>
+  <data name="btnPrevious" xml:space="preserve">
+    <value>Trang trước</value>
   </data>
   <data name="btnPublish" xml:space="preserve">
     <value>Nhà xuất bản</value>
@@ -174,6 +183,9 @@
   <data name="Confirm" xml:space="preserve">
     <value>Xác nhận</value>
   </data>
+  <data name="ConnectionWasCancelled" xml:space="preserve">
+    <value>Kết nối đã bị ngắt</value>
+  </data>
   <data name="FillAllBlank" xml:space="preserve">
     <value>Hãy điền đủ thông tin</value>
   </data>
@@ -182,6 +194,12 @@
   </data>
   <data name="InvalidValue" xml:space="preserve">
     <value>Giá trị nhập vào không đúng dạng</value>
+  </data>
+  <data name="IsCanceled" xml:space="preserve">
+    <value>Đã hủy</value>
+  </data>
+  <data name="IsFaulted" xml:space="preserve">
+    <value>Không tìm thấy thủ tục hoặc mất kết nối?</value>
   </data>
   <data name="lblAddress" xml:space="preserve">
     <value>Địa chỉ</value>
@@ -213,6 +231,9 @@
   <data name="lblBorrowDate" xml:space="preserve">
     <value>Ngày mượn</value>
   </data>
+  <data name="lblCancel" xml:space="preserve">
+    <value>Hủy kết nối</value>
+  </data>
   <data name="lblDateOfBirth" xml:space="preserve">
     <value>Ngày sinh</value>
   </data>
@@ -239,6 +260,9 @@
   </data>
   <data name="lblNew" xml:space="preserve">
     <value>Thêm</value>
+  </data>
+  <data name="lblNumbericalOrder" xml:space="preserve">
+    <value>STT</value>
   </data>
   <data name="lblPassword" xml:space="preserve">
     <value>Mật khẩu</value>
@@ -275,6 +299,9 @@
   </data>
   <data name="lblUserName" xml:space="preserve">
     <value>Tài khoản</value>
+  </data>
+  <data name="LogoutNotification" xml:space="preserve">
+    <value>Bạn có muốn đăng xuất không?</value>
   </data>
   <data name="OpenConnectionError" xml:space="preserve">
     <value>Không thể kết nối với cơ sở dữ liệu</value>

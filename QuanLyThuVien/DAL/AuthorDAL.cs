@@ -5,53 +5,33 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace QuanLyThuVien.DAL
 {
-    public class AuthorDAL
+    public class AuthorDAL : BaseDAL
     {
         public AuthorDAL() { }
 
-        public async Task<DataTable> loadData()
+        protected override string zProceduceName { get => "dbo.LoadAuthor"; }
+
+        public override async Task<DataTable> loadDataAsync()
         {
-            string _zQuery = "dbo.LoadAuthor";
-            try
-            {
-                return await Task.Run(() => DataProvider.Instance.executeQueryAsync(_zQuery));
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return null;
-            }
-        }
-        public async Task insertAuthorAsync(string pzName, string pzAddress, string pzEmail, string pzPhone, DateTime pDtpBirth)
-        {
-            string _zQuery = "dbo.InsertAuthor @name , @address , @email , @phone , @birth";
-            try
-            {
-                await Task.Run(
-                    () => DataProvider.Instance.executeNonQueryAsync(_zQuery,
-                    new object[] { pzName, pzAddress, pzEmail, pzPhone, pDtpBirth }));
-            }catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            return await base.loadDataAsync();
         }
 
-        public async Task updateAuthorAsync(int id, string pzName, string pzAddress, string pzEmail, string pzPhone, DateTime pDtpBirth)
+
+        public async Task insertAuthorAsync(string pzName, string pzAddress, string pzEmail, string pzPhone, DateTime pDtpBirth, CancellationToken pCt)
+        {
+            string _zQuery = "dbo.InsertAuthor @name , @address , @email , @phone , @birth";
+            await DataProvider.Instance.executeNonQueryAsync(_zQuery, pCt,
+                    new object[] { pzName, pzAddress, pzEmail, pzPhone, pDtpBirth });
+        }
+
+        public async Task updateAuthorAsync(int id, string pzName, string pzAddress, string pzEmail, string pzPhone, DateTime pDtpBirth, CancellationToken pCt)
         {
             string _zQuery = "dbo.UpdateAuthor @id , @name , @address , @email , @phone , @birth";
-            try
-            {
-                await Task.Run(
-                    () => DataProvider.Instance.executeNonQueryAsync(_zQuery,
-                    new object[] { id, pzName, pzAddress, pzEmail, pzPhone, pDtpBirth }));
-            }catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            await DataProvider.Instance.executeNonQueryAsync(_zQuery, pCt,
+                    new object[] { id, pzName, pzAddress, pzEmail, pzPhone, pDtpBirth });
         }
     }
 }

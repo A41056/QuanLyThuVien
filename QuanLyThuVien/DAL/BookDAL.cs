@@ -3,64 +3,50 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace QuanLyThuVien.DAL
 {
-    public class BookDAL
+    public class BookDAL : BaseDAL
     {
         public BookDAL() { }
 
-        public async Task<DataTable> loadDataAsync()
+        protected override string zProceduceName => "dbo.LoadBook";
+
+        public override async Task<DataTable> loadDataAsync()
         {
-            string _zQuery = "dbo.LoadBook";
-            try
-            {
-                return await Task.Run(() => DataProvider.Instance.executeQueryAsync(_zQuery));
-            }catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-                return null;
-            }
+            return await base.loadDataAsync();
         }
 
-        public async Task insertBookAsync(string pzCode, string pzName, int pnIDPublish, int pnIDAuthor, string pzCodeType, DateTime pdtpPublishDate, int pnAmount)
+        public async Task<DataTable> loadDataPagingAsync(int pnPageIndex, int pnPageSize)
+        {
+            string _zQuery = "dbo.LoadBookPaging @PageIndex , @PageSize , null";
+            return await DataProvider.Instance.executeQueryAsync(_zQuery, new object[] { pnPageIndex, pnPageSize });
+        }
+
+        public async Task<object> getTotalRecord()
+        {
+            string _zQuery = "dbo.GetNumberRecord";
+            return await DataProvider.Instance.executeScalar(_zQuery);
+        }
+
+        public async Task insertBookAsync(string pzCode, string pzName, int pnIDPublish, int pnIDAuthor, string pzCodeType, DateTime pdtpPublishDate, int pnAmount, CancellationToken pCT)
         {
             string _zQuery = "dbo.InsertBook @CodeInsert , @Name , @IDPublish , @IDAuthor , @CodeTypeBook , @PublishDate , @Amount";
-            try
-            {
-                await Task.Run(() => DataProvider.Instance.executeNonQueryAsync(_zQuery, new object[] { pzCode, pzName, pnIDPublish, pnIDAuthor, pzCodeType, pdtpPublishDate, pnAmount }));
-            }
-            catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            await DataProvider.Instance.executeNonQueryAsync(_zQuery, pCT, new object[] { pzCode, pzName, pnIDPublish, pnIDAuthor, pzCodeType, pdtpPublishDate, pnAmount });
         }
 
-        public async Task updateBookAsync(string pzCode, string pzName, int pnIDPublish, int pnIDAuthor, string pzCodeType, DateTime pdtpPublishDate)
+        public async Task updateBookAsync(string pzCode, string pzName, int pnIDPublish, int pnIDAuthor, string pzCodeType, DateTime pdtpPublishDate, CancellationToken pCT)
         {
             string _zQuery = "dbo.UpdateBook @Code , @Name , @IDPublish , @IDAuthor , @CodeTypeBook , @PublishDate";
-            try
-            {
-                await Task.Run(() => DataProvider.Instance.executeNonQueryAsync(_zQuery, new object[] { pzCode, pzName, pnIDPublish, pnIDAuthor, pzCodeType, pdtpPublishDate }));
-            }catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            await DataProvider.Instance.executeNonQueryAsync(_zQuery, pCT, new object[] { pzCode, pzName, pnIDPublish, pnIDAuthor, pzCodeType, pdtpPublishDate });
         }
 
-        public async Task deleteBookAsync(string pzCode)
+        public async Task deleteBookAsync(string pzCode, CancellationToken pCT)
         {
             string _zQuery = "dbo.DeleteBook @Code";
-            try
-            {
-                await Task.Run(() => DataProvider.Instance.executeNonQueryAsync(_zQuery, new object[] { pzCode }));
-            }catch(Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
+            await DataProvider.Instance.executeNonQueryAsync(_zQuery, pCT, new object[] { pzCode });
         }
-
     }
 }

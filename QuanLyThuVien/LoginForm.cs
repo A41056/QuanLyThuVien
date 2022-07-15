@@ -15,7 +15,7 @@ namespace QuanLyThuVien
     public partial class LoginForm : Form
     {
         private LoginDAL _loginDAL = new LoginDAL();
-        public static CancellationTokenSource _tokenSource;
+        private CancellationTokenSource _tokenSource = null;
         public LoginForm()
         {
             InitializeComponent();
@@ -35,19 +35,20 @@ namespace QuanLyThuVien
             txtPassword.PasswordChar = chxShowPassword.Checked ? '\0' : '*';
         }
 
-        private void btnLogin_Click(object sender, EventArgs e) // async void không bắt được lỗi
+        private void btnLogin_Click(object sender, EventArgs e)
         {
-            btnLogin.Enabled = false;
-
             if (_tokenSource == null)
+            {
+                btnLogin.Text = QuanLyThuVien.Resource.btnCancel;
+
                 _tokenSource = new CancellationTokenSource();
 
-            login(txtUsername.Text, txtPassword.Text).ContinueWith(
-                (_taskToContinue) => 
+                _loginDAL.loginAsync(txtUsername.Text, txtPassword.Text, _tokenSource.Token).ContinueWith(
+                (_taskToContinue) =>
                 {
                     if (_taskToContinue.IsFaulted)
                     {
-                        MessageBox.Show(_taskToContinue.Exception.InnerException.Message);
+                        MessageBox.Show(_taskToContinue.Exception.Message);
                     }
                     else if (_taskToContinue.IsCanceled)
                     {
@@ -59,10 +60,13 @@ namespace QuanLyThuVien
                         {
                             if (InvokeRequired)
                             {
-                                Invoke((MethodInvoker)(() => Hide()));
-                                var _mainFrm = new MainForm();
-                                _mainFrm.ShowDialog();
-                                _mainFrm.Dispose();
+                                Invoke((MethodInvoker)(() =>
+                                {
+                                    Hide();
+                                    var _mainFrm = new MainForm();
+                                    _mainFrm.ShowDialog();
+                                    _mainFrm.Dispose();
+                                }));
                             }
                         }
                         else
@@ -71,22 +75,19 @@ namespace QuanLyThuVien
                         }
                     }
                 });
-        }
-        
-        private async Task<bool> login(string pzUsername, string pzPassword)
-        {
-            return await _loginDAL.loginAsync(pzUsername, pzPassword, _tokenSource.Token) ? true : throw new Exception("Connection Error");
-        }
-
-        private void btnEsc_Click(object sender, EventArgs e)
-        {
-            btnLogin.Enabled = true;
-            if (_tokenSource != null)
+            }
+            else
             {
+                btnLogin.Text = QuanLyThuVien.Resource.btnLogin;
+
                 _tokenSource.Cancel();
                 _tokenSource.Dispose();
                 _tokenSource = null;
             }
+        }
+        
+        private void btnEsc_Click(object sender, EventArgs e)
+        {
             if (MessageBox.Show(QuanLyThuVien.Resource.ClosingNotification,
                     QuanLyThuVien.Resource.Confirm, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 Application.Exit();
@@ -94,14 +95,6 @@ namespace QuanLyThuVien
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            btnLogin.Enabled = true;
-
-            if (_tokenSource != null)
-            {
-                _tokenSource.Cancel();
-                _tokenSource.Dispose();
-                _tokenSource = null;
-            }
             if (MessageBox.Show(QuanLyThuVien.Resource.ClosingNotification,
                     QuanLyThuVien.Resource.Confirm, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 Application.Exit();
