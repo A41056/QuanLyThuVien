@@ -83,7 +83,6 @@ namespace QuanLyThuVien
         {
             Hide();
             closeOpenedForm();
-            Close();
         }
 
         private void closeOpenedForm()
@@ -92,8 +91,11 @@ namespace QuanLyThuVien
 
             foreach (Form _zFrm in _lstOpenedform)
             {
-                _zFrm.Dispose();
-                _zFrm.Close();
+                if (_zFrm.InvokeRequired)
+                {
+                    Invoke((MethodInvoker)(() => _zFrm.Dispose()));
+                    _zFrm.Close();
+                }
             }
             Application.Restart();
         }
@@ -163,7 +165,7 @@ namespace QuanLyThuVien
             applyUIStrings();
         }
 
-        private void MainForm_FormClosed(object sender, FormClosedEventArgs e)
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             Application.Exit();
         }

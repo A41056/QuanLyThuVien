@@ -94,11 +94,11 @@ namespace QuanLyThuVien
             this.panelContainer.BackColor = System.Drawing.Color.White;
             this.panelContainer.ColumnCount = 7;
             this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
-            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35F));
+            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35F));
-            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
             this.panelContainer.Controls.Add(this.pictureBox2, 0, 0);
             this.panelContainer.Controls.Add(this.bnEsc, 6, 0);
@@ -129,11 +129,6 @@ namespace QuanLyThuVien
             this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.panelContainer.Size = new System.Drawing.Size(913, 555);
             this.panelContainer.TabIndex = 0;
             // 
@@ -170,7 +165,7 @@ namespace QuanLyThuVien
             // pictureBox3
             // 
             this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(610, 80);
+            this.pictureBox3.Location = new System.Drawing.Point(624, 80);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(105, 105);
             this.pictureBox3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -183,7 +178,7 @@ namespace QuanLyThuVien
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(610, 188);
+            this.label1.Location = new System.Drawing.Point(624, 188);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(105, 20);
             this.label1.TabIndex = 3;
@@ -193,7 +188,7 @@ namespace QuanLyThuVien
             // lblUsername
             // 
             this.lblUsername.AutoSize = true;
-            this.lblUsername.Location = new System.Drawing.Point(519, 254);
+            this.lblUsername.Location = new System.Drawing.Point(521, 254);
             this.lblUsername.Margin = new System.Windows.Forms.Padding(7);
             this.lblUsername.Name = "lblUsername";
             this.lblUsername.Size = new System.Drawing.Size(75, 20);
@@ -204,7 +199,7 @@ namespace QuanLyThuVien
             // 
             this.txtUsername.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelContainer.SetColumnSpan(this.txtUsername, 3);
-            this.txtUsername.Location = new System.Drawing.Point(519, 288);
+            this.txtUsername.Location = new System.Drawing.Point(521, 288);
             this.txtUsername.Margin = new System.Windows.Forms.Padding(7);
             this.txtUsername.Name = "txtUsername";
             this.txtUsername.Size = new System.Drawing.Size(285, 27);
@@ -214,7 +209,7 @@ namespace QuanLyThuVien
             // lblPassword
             // 
             this.lblPassword.AutoSize = true;
-            this.lblPassword.Location = new System.Drawing.Point(519, 329);
+            this.lblPassword.Location = new System.Drawing.Point(521, 329);
             this.lblPassword.Margin = new System.Windows.Forms.Padding(7);
             this.lblPassword.Name = "lblPassword";
             this.lblPassword.Size = new System.Drawing.Size(74, 20);
@@ -225,7 +220,7 @@ namespace QuanLyThuVien
             // 
             this.txtPassword.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelContainer.SetColumnSpan(this.txtPassword, 3);
-            this.txtPassword.Location = new System.Drawing.Point(519, 363);
+            this.txtPassword.Location = new System.Drawing.Point(521, 363);
             this.txtPassword.Margin = new System.Windows.Forms.Padding(7);
             this.txtPassword.Name = "txtPassword";
             this.txtPassword.PasswordChar = '*';
@@ -237,7 +232,7 @@ namespace QuanLyThuVien
             // 
             this.chxShowPassword.AutoSize = true;
             this.panelContainer.SetColumnSpan(this.chxShowPassword, 2);
-            this.chxShowPassword.Location = new System.Drawing.Point(519, 404);
+            this.chxShowPassword.Location = new System.Drawing.Point(521, 404);
             this.chxShowPassword.Margin = new System.Windows.Forms.Padding(7);
             this.chxShowPassword.Name = "chxShowPassword";
             this.chxShowPassword.Size = new System.Drawing.Size(153, 24);
@@ -248,15 +243,17 @@ namespace QuanLyThuVien
             // 
             // btnLogin
             // 
+            this.btnLogin.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.btnLogin.AutoSize = true;
             this.btnLogin.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.btnLogin.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(204)))), ((int)(((byte)(145)))));
             this.btnLogin.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLogin.ForeColor = System.Drawing.Color.White;
-            this.btnLogin.Location = new System.Drawing.Point(517, 479);
+            this.btnLogin.Location = new System.Drawing.Point(519, 479);
             this.btnLogin.Margin = new System.Windows.Forms.Padding(5);
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(85, 32);
+            this.btnLogin.Size = new System.Drawing.Size(97, 32);
             this.btnLogin.TabIndex = 4;
             this.btnLogin.Text = "Đăng nhập";
             this.btnLogin.UseVisualStyleBackColor = false;
@@ -271,10 +268,10 @@ namespace QuanLyThuVien
             this.btnExit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(63)))), ((int)(((byte)(204)))), ((int)(((byte)(145)))));
             this.btnExit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnExit.ForeColor = System.Drawing.Color.White;
-            this.btnExit.Location = new System.Drawing.Point(723, 479);
+            this.btnExit.Location = new System.Drawing.Point(737, 479);
             this.btnExit.Margin = new System.Windows.Forms.Padding(5);
             this.btnExit.Name = "btnExit";
-            this.btnExit.Size = new System.Drawing.Size(85, 32);
+            this.btnExit.Size = new System.Drawing.Size(71, 32);
             this.btnExit.TabIndex = 5;
             this.btnExit.Text = "Thoát";
             this.btnExit.UseVisualStyleBackColor = false;
@@ -292,7 +289,7 @@ namespace QuanLyThuVien
             this.cbxFlags.Items.AddRange(new object[] {
             "EN",
             "VI"});
-            this.cbxFlags.Location = new System.Drawing.Point(857, 41);
+            this.cbxFlags.Location = new System.Drawing.Point(859, 41);
             this.cbxFlags.Name = "cbxFlags";
             this.cbxFlags.Size = new System.Drawing.Size(51, 38);
             this.cbxFlags.TabIndex = 11;

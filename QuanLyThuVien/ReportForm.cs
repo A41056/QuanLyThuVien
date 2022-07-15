@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuanLyThuVien.DAL;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,6 +14,7 @@ namespace QuanLyThuVien
 {
     public partial class ReportForm : Form
     {
+        private ReportDAL reportDAL = null;
         public ReportForm()
         {
             InitializeComponent();
@@ -32,61 +34,39 @@ namespace QuanLyThuVien
 
         private void loadData()
         {
-            //var query = from ms in DB.BorrowDetails
-            //            join bt in DB.BorrowTickets
-            //            on ms.IDTicket equals bt.ID
-            //            where bt.BorrowDate >= dtpForm.Value
-            //            && bt.BorrowDate <= dtpTo.Value
-            //            select new
-            //            {
-            //                maphieu = ms.BorrowTicket.ID,
-            //                mathongtin = ms.ID,
-            //                masach = ms.BookCode,
-            //                madocgia = ms.IDAuthor,
-            //                ngaymuon = bt.BorrowDate,
-            //                ngaytra = ms.ReturnDate
-            //            };
-            //dgvReport.DataSource = query;
-            //dgvReport.Columns[0].HeaderText = QuanLyThuVien.Resource.lblID;
-            //dgvReport.Columns[1].HeaderText = QuanLyThuVien.Resource.lblTicketDetailsID;
-            //dgvReport.Columns[2].HeaderText = QuanLyThuVien.Resource.lblBookCode;
-            //dgvReport.Columns[3].HeaderText = QuanLyThuVien.Resource.lblReaderID;
-            //dgvReport.Columns[4].HeaderText = QuanLyThuVien.Resource.lblBorrowDate;
-            //dgvReport.Columns[5].HeaderText = QuanLyThuVien.Resource.lblReturnDate;
+            if (reportDAL == null)
+                reportDAL = new ReportDAL();
+
+            dgvReport.DataSource = reportDAL.getRecordByDate(dtpForm.Value, dtpTo.Value); 
         }
 
         private void btnExcel_Click(object sender, EventArgs e)
         {
-            if (dgvReport.Rows.Count > 0)
-            {
-                Microsoft.Office.Interop.Excel.Application excl = new Microsoft.Office.Interop.Excel.Application();
-                excl.Application.Workbooks.Add(Type.Missing);
-                for (int i = 1; i <= dgvReport.Columns.Count; i++)
-                {
-                    excl.Cells[1, i] = dgvReport.Columns[i - 1].HeaderText;
-                }
-                for (int i = 0; i < dgvReport.Rows.Count; i++)
-                {
-                    for (int j = 0; j < dgvReport.Columns.Count; j++)
-                    {
-                        excl.Cells[i + 2, j + 1] = dgvReport.Rows[i].Cells[j].Value.ToString();
-                    }
-                }
-                excl.Columns.AutoFit();
-                excl.Visible = true;
-            }
+            //BaseControl.Instance.exportToExcel(dgvReport);
         }
 
         private void ReportForm_Load(object sender, EventArgs e)
         {
+            loadData();
             applyUIStrings();
         }
-
         
         private void applyUIStrings()
         {
             lblFrom.Text = QuanLyThuVien.Resource.lblFromDate;
             lblTo.Text = QuanLyThuVien.Resource.lblToDate;
+
+            //if (dgvReport != null)
+            //{
+            //    dgvReport.Columns[0].HeaderText = QuanLyThuVien.Resource.lblID;
+            //    dgvReport.Columns[1].HeaderText = QuanLyThuVien.Resource.lblTicketDetailsID;
+            //    dgvReport.Columns[2].HeaderText = QuanLyThuVien.Resource.lblBookCode;
+            //    dgvReport.Columns[3].HeaderText = QuanLyThuVien.Resource.lblAuthorID;
+            //    dgvReport.Columns[4].HeaderText = QuanLyThuVien.Resource.lblReaderID;
+            //    dgvReport.Columns[5].HeaderText = QuanLyThuVien.Resource.lblAmout;
+            //    dgvReport.Columns[6].HeaderText = QuanLyThuVien.Resource.lblBorrowDate;
+            //    dgvReport.Columns[7].HeaderText = QuanLyThuVien.Resource.lblReturnDate;
+            //}
         }
 
         private void btnFind_Click(object sender, EventArgs e)

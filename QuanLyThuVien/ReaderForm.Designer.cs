@@ -29,8 +29,10 @@ namespace QuanLyThuVien
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReaderForm));
             this.txtAddress = new System.Windows.Forms.TextBox();
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.txtPhone = new System.Windows.Forms.TextBox();
@@ -47,9 +49,12 @@ namespace QuanLyThuVien
             this.btnNew = new System.Windows.Forms.ToolStripButton();
             this.btnEdit = new System.Windows.Forms.ToolStripButton();
             this.btnExport = new System.Windows.Forms.ToolStripButton();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.btnCancel = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dgvReader)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.childToolStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // txtAddress
@@ -79,6 +84,7 @@ namespace QuanLyThuVien
             this.txtPhone.Name = "txtPhone";
             this.txtPhone.Size = new System.Drawing.Size(248, 30);
             this.txtPhone.TabIndex = 5;
+            this.txtPhone.Validating += new System.ComponentModel.CancelEventHandler(this.txtPhone_Validating);
             // 
             // dgvReader
             // 
@@ -115,8 +121,6 @@ namespace QuanLyThuVien
             this.dgvReader.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvReader.Size = new System.Drawing.Size(1403, 844);
             this.dgvReader.TabIndex = 6;
-            this.dgvReader.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvReader_CellClick);
-            this.dgvReader.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvReader_KeyDown);
             // 
             // lblPhone
             // 
@@ -226,7 +230,8 @@ namespace QuanLyThuVien
             this.childToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnNew,
             this.btnEdit,
-            this.btnExport});
+            this.btnExport,
+            this.btnCancel});
             this.childToolStrip.LayoutStyle = System.Windows.Forms.ToolStripLayoutStyle.Flow;
             this.childToolStrip.Location = new System.Drawing.Point(0, 0);
             this.childToolStrip.Name = "childToolStrip";
@@ -264,6 +269,21 @@ namespace QuanLyThuVien
             this.btnExport.Text = "toolStripButton3";
             this.btnExport.Click += new System.EventHandler(this.btnExcel_Click);
             // 
+            // errorProvider
+            // 
+            this.errorProvider.ContainerControl = this;
+            this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnCancel.Image = global::QuanLyThuVien.Properties.Resources.cancel;
+            this.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(29, 24);
+            this.btnCancel.Text = "Cancel";
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // ReaderForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -280,6 +300,7 @@ namespace QuanLyThuVien
             this.tableLayoutPanel1.PerformLayout();
             this.childToolStrip.ResumeLayout(false);
             this.childToolStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -303,5 +324,7 @@ namespace QuanLyThuVien
         private System.Windows.Forms.ToolStripButton btnNew;
         private System.Windows.Forms.ToolStripButton btnEdit;
         private System.Windows.Forms.ToolStripButton btnExport;
+        private System.Windows.Forms.ErrorProvider errorProvider;
+        private System.Windows.Forms.ToolStripButton btnCancel;
     }
 }

@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,6 +16,7 @@ namespace QuanLyThuVien
     public partial class UserAccountForm : Form
     {
         private UserAccountDAL userAccountDAL;
+        private CancellationTokenSource _ct = null;
 
         public UserAccountForm()
         {
@@ -28,9 +30,6 @@ namespace QuanLyThuVien
             applyUIStrings();
         }
 
-        string zID, zRoleID;
-        int nIndex;
-
         private bool checkValid()
         {
             if (String.IsNullOrEmpty(txtUsername.Text) ||
@@ -39,70 +38,57 @@ namespace QuanLyThuVien
             return true;
         }
 
-
         private void btnExcel_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.exportToExcel(dgvAccount);
+            //BaseControl.Instance.exportToExcel(dgvAccount);
         }
 
         private void UserAccountForm_Load(object sender, EventArgs e)
         {
             if (userAccountDAL == null)
                 userAccountDAL = new UserAccountDAL();
-            BaseControl.Instance.runTask(loadData());
+
+            loadData().ContinueWith((t) =>
+            {
+                if (InvokeRequired)
+                {
+                    Invoke((MethodInvoker)(() =>
+                    {
+                        bindingData();
+                        applyUIStrings();
+                    }));
+                }
+                else
+                {
+                    bindingData();
+                    applyUIStrings();
+                }
+            });
         }
         private async Task loadData()
         {
             dgvAccount.DataSource = await userAccountDAL.loadData();
-            
+
             cbRole.DataSource = await userAccountDAL.loadRole();
             cbRole.DisplayMember = "Name";
             cbRole.ValueMember = "ID";
         }
 
-        private void dgvAccount_CellClick(object sender, DataGridViewCellEventArgs e)
+
+        private void bindingData()
         {
-            nIndex = e.RowIndex;
-            if(nIndex >= 0)
-                bindingData(nIndex);
+            txtID.DataBindings.Clear();
+            txtUsername.DataBindings.Clear();
+            txtPassword.DataBindings.Clear();
+            cbRole.DataBindings.Clear();
+
+            txtID.DataBindings.Add("Text", (dgvAccount.DataSource as DataTable), "ID");
+            txtUsername.DataBindings.Add("Text", (dgvAccount.DataSource as DataTable), "UserName");
+            txtPassword.DataBindings.Add("Text", (dgvAccount.DataSource as DataTable), "Password");
+            //cbRole.DataBindings.Add("Text", (dgvAccount.DataSource as DataTable), "RoleName");
         }
 
-        private void bindingData(int pnIndex)
-        {
-            DataGridViewRow row = dgvAccount.Rows[pnIndex];
-            zID = row.Cells[0].Value.ToString();
-            txtID.Text = zID;
-            txtUsername.Text = row.Cells[1].Value.ToString();
-            txtPassword.Text = row.Cells[2].Value.ToString();
-            cbRole.Text = row.Cells[3].Value.ToString();
-            row.Dispose();
-        }
-
-        private void dgvAccount_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Down)
-            {
-                ++nIndex;
-                if (nIndex >= 0 && nIndex <= dgvAccount.Rows.Count - 1)
-                    bindingData(nIndex);
-                else if (nIndex > dgvAccount.Rows.Count - 1)
-                {
-                    nIndex = dgvAccount.Rows.Count - 1;
-                    bindingData(nIndex);
-                }
-            }
-            else if (e.KeyCode == Keys.Up)
-            {
-                --nIndex;
-                if (nIndex >= 0 && nIndex <= dgvAccount.Rows.Count - 1)
-                    bindingData(nIndex);
-                else
-                {
-                    nIndex = 0;
-                    bindingData(nIndex);
-                }
-            }
-        }
+        string zRoleID;
 
         private void cbRole_SelectedValueChanged(object sender, EventArgs e)
         {
@@ -112,29 +98,48 @@ namespace QuanLyThuVien
         private void btnNew_Click(object sender, EventArgs e)
         {
             if (!checkValid())
+            {
                 MessageBox.Show(QuanLyThuVien.Resource.FillAllBlank);
+            }
             else
             {
-                BaseControl.Instance.runTask( userAccountDAL.insertAccount(txtUsername.Text, txtPassword.Text, Convert.ToInt32(zRoleID)));
-                BaseControl.Instance.runTask(loadData());
+                if (_ct == null)
+                    _ct = new CancellationTokenSource();
+
+                userAccountDAL.insertAccount(txtUsername.Text, txtPassword.Text, Convert.ToInt32(zRoleID), _ct.Token).ContinueWith((t) =>
+                {
+                    loadData();
+                });
             }
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
             if (!checkValid())
+            {
                 MessageBox.Show(QuanLyThuVien.Resource.FillAllBlank);
+            }
             else
             {
-                BaseControl.Instance.runTask( userAccountDAL.updateAccount(Convert.ToInt32(zID), txtUsername.Text, txtPassword.Text, Convert.ToInt32(zRoleID)));
-                BaseControl.Instance.runTask( loadData());
+                if (_ct == null)
+                    _ct = new CancellationTokenSource();
+
+                userAccountDAL.updateAccount(Convert.ToInt32(txtID.Text), txtUsername.Text, txtPassword.Text, Convert.ToInt32(zRoleID), _ct.Token).ContinueWith((t) =>
+                {
+                    loadData();
+                });
             }
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.runTask( userAccountDAL.deleteAccount(Convert.ToInt32(zID)));
-            BaseControl.Instance.runTask(loadData());
+            if (_ct == null)
+                _ct = new CancellationTokenSource();
+
+            userAccountDAL.deleteAccount(Convert.ToInt32(txtID.Text),_ct.Token).ContinueWith((t) =>
+            {
+                loadData();
+            });
         }
 
         private void applyUIStrings()
@@ -151,10 +156,16 @@ namespace QuanLyThuVien
                 dgvAccount.Columns[2].HeaderText = QuanLyThuVien.Resource.lblPassword;
                 dgvAccount.Columns[3].HeaderText = QuanLyThuVien.Resource.lblRole;
             }
+        }
 
-            btnNew.Text = QuanLyThuVien.Resource.btnNew;
-            btnEdit.Text = QuanLyThuVien.Resource.btnEdit;
-            btnDelete.Text = QuanLyThuVien.Resource.btnDelete;
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            if (_ct != null)
+            {
+                _ct.Cancel();
+                _ct.Dispose();
+                _ct = null;
+            }
         }
     }
 }

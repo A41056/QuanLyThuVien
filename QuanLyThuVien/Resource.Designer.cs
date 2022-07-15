@@ -115,6 +115,15 @@ namespace QuanLyThuVien {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string btnCancel {
+            get {
+                return ResourceManager.GetString("btnCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete.
         /// </summary>
         internal static string btnDelete {
@@ -165,6 +174,24 @@ namespace QuanLyThuVien {
         internal static string btnNew {
             get {
                 return ResourceManager.GetString("btnNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        internal static string btnNext {
+            get {
+                return ResourceManager.GetString("btnNext", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous.
+        /// </summary>
+        internal static string btnPrevious {
+            get {
+                return ResourceManager.GetString("btnPrevious", resourceCulture);
             }
         }
         
@@ -232,6 +259,15 @@ namespace QuanLyThuVien {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Connection was cancelled.
+        /// </summary>
+        internal static string ConnectionWasCancelled {
+            get {
+                return ResourceManager.GetString("ConnectionWasCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please Fill All Infomation.
         /// </summary>
         internal static string FillAllBlank {
@@ -255,6 +291,24 @@ namespace QuanLyThuVien {
         internal static string InvalidValue {
             get {
                 return ResourceManager.GetString("InvalidValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Canceled.
+        /// </summary>
+        internal static string IsCanceled {
+            get {
+                return ResourceManager.GetString("IsCanceled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Could not find stored produce or disconnected.
+        /// </summary>
+        internal static string IsFaulted {
+            get {
+                return ResourceManager.GetString("IsFaulted", resourceCulture);
             }
         }
         
@@ -349,6 +403,15 @@ namespace QuanLyThuVien {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel Connection.
+        /// </summary>
+        internal static string lblCancel {
+            get {
+                return ResourceManager.GetString("lblCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Date of Birth.
         /// </summary>
         internal static string lblDateOfBirth {
@@ -426,6 +489,15 @@ namespace QuanLyThuVien {
         internal static string lblNew {
             get {
                 return ResourceManager.GetString("lblNew", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Numberical Order.
+        /// </summary>
+        internal static string lblNumbericalOrder {
+            get {
+                return ResourceManager.GetString("lblNumbericalOrder", resourceCulture);
             }
         }
         
@@ -543,6 +615,15 @@ namespace QuanLyThuVien {
         internal static string lblUserName {
             get {
                 return ResourceManager.GetString("lblUserName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure want to logout?.
+        /// </summary>
+        internal static string LogoutNotification {
+            get {
+                return ResourceManager.GetString("LogoutNotification", resourceCulture);
             }
         }
         

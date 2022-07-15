@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,6 +16,8 @@ namespace QuanLyThuVien
     public partial class PublishCompanyForm : Form
     {
         private PublishDAL publishDAL;
+        private CancellationTokenSource _ct = null;
+
         public PublishCompanyForm()
         {
             InitializeComponent();
@@ -24,16 +27,6 @@ namespace QuanLyThuVien
         private void MainForm_onLanguageChanged(object sender, EventArgs e)
         {
             applyUIStrings();
-        }
-
-        string zID;
-        int nIndex;
-
-        private void dgvPublisher_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            nIndex = e.RowIndex;
-            if(nIndex >= 0)
-                bindingData(nIndex);
         }
 
         private bool checkValid()
@@ -48,61 +41,52 @@ namespace QuanLyThuVien
         
         private void btnExcel_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.exportToExcel(dgvPublisher);
+            //BaseControl.Instance.exportToExcel(dgvPublisher);
         }
 
         private void PublishingCompanyForm_Load(object sender, EventArgs e)
         {
             if (publishDAL == null)
                 publishDAL = new PublishDAL();
-            BaseControl.Instance.runTask( loadData());
+
+            loadData().ContinueWith((t) => 
+            {
+                if (InvokeRequired)
+                {
+                    Invoke((MethodInvoker)(() =>
+                    {
+                        bindingData();
+                        applyUIStrings();
+                    }));
+                }
+                else
+                {
+                    bindingData();
+                    applyUIStrings();
+                }
+            });
         }
 
         private async Task loadData()
         {
             dgvPublisher.DataSource = await publishDAL.loadData();
-            
-            applyUIStrings();
         }
 
-        private void bindingData(int pnIndex)
+        private void bindingData()
         {
-            DataGridViewRow row = dgvPublisher.Rows[nIndex];
-            zID = row.Cells[0].Value.ToString();
-            txtID.Text = zID;
-            txtName.Text = row.Cells[1].Value.ToString();
-            txtAddress.Text = row.Cells[2].Value.ToString();
-            txtEmail.Text = row.Cells[3].Value.ToString();
-            txtPhone.Text = row.Cells[4].Value.ToString();
+            txtID.DataBindings.Clear();
+            txtName.DataBindings.Clear();
+            txtPhone.DataBindings.Clear();
+            txtEmail.DataBindings.Clear();
+            txtAddress.DataBindings.Clear();
+
+            txtID.DataBindings.Add("Text", (dgvPublisher.DataSource as DataTable), "ID");
+            txtName.DataBindings.Add("Text", (dgvPublisher.DataSource as DataTable), "Name");
+            txtPhone.DataBindings.Add("Text", (dgvPublisher.DataSource as DataTable), "Phone");
+            txtEmail.DataBindings.Add("Text", (dgvPublisher.DataSource as DataTable), "Email");
+            txtAddress.DataBindings.Add("Text", (dgvPublisher.DataSource as DataTable), "Address");
         }
 
-        private void dgvPublisher_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Down)
-            {
-                ++nIndex;
-                if (nIndex >= 0 && nIndex <= dgvPublisher.Rows.Count - 1)
-                    bindingData(nIndex);
-                else if (nIndex > dgvPublisher.Rows.Count - 1)
-                {
-                    nIndex = dgvPublisher.Rows.Count - 1;
-                    bindingData(nIndex);
-                }
-            }
-            else if (e.KeyCode == Keys.Up)
-            {
-                --nIndex;
-                if (nIndex >= 0 && nIndex <= dgvPublisher.Rows.Count - 1)
-                    bindingData(nIndex);
-                else
-                {
-                    nIndex = 0;
-                    bindingData(nIndex);
-                }
-            }
-        }
-
-        
         private void applyUIStrings()
         {
             lblID.Text = QuanLyThuVien.Resource.lblID;
@@ -118,23 +102,28 @@ namespace QuanLyThuVien
                 dgvPublisher.Columns[3].HeaderText = "Email";
                 dgvPublisher.Columns[4].HeaderText = QuanLyThuVien.Resource.lblPhone;
             }
-            btnNew.Text = QuanLyThuVien.Resource.btnNew;
-            btnEdit.Text = QuanLyThuVien.Resource.btnEdit;
         }
 
 
         private void btnNew_Click(object sender, EventArgs e)
         {
             if (!checkValid())
+            {
                 MessageBox.Show(QuanLyThuVien.Resource.FillAllBlank);
+            }
             else
             {
-                int _nsdt;
-                if (int.TryParse(txtPhone.Text, out _nsdt))
+                if (int.TryParse(txtPhone.Text, out int _nsdt))
                 {
-                    BaseControl.Instance.runTask(
-                        publishDAL.insertPublisher(txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text));
-                    BaseControl.Instance.runTask(loadData());
+                    if (_ct == null)
+                        _ct = new CancellationTokenSource();
+
+                    publishDAL.insertPublisher(txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text, _ct.Token).ContinueWith((t) => 
+                    { 
+                        loadData();
+                        _ct.Dispose();
+                        _ct = null;
+                    });
                 }
                 else
                 {
@@ -146,16 +135,22 @@ namespace QuanLyThuVien
         private void btnEdit_Click(object sender, EventArgs e)
         {
             if (!checkValid())
+            {
                 MessageBox.Show(QuanLyThuVien.Resource.FillAllBlank);
+            }
             else
             {
-                int _sdt;
-                if (int.TryParse(txtPhone.Text, out _sdt))
+                if (int.TryParse(txtPhone.Text, out int _nsdt))
                 {
+                    if (_ct == null)
+                        _ct = new CancellationTokenSource();
 
-                    BaseControl.Instance.runTask(
-                        publishDAL.updatePublisher(Convert.ToInt32(zID), txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text));
-                    BaseControl.Instance.runTask(loadData());
+                    publishDAL.updatePublisher(Convert.ToInt32(txtID.Text), txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text, _ct.Token).ContinueWith((t) =>
+                    {
+                        loadData();
+                        _ct.Dispose();
+                        _ct = null;
+                    });
                 }
                 else
                 {
@@ -164,5 +159,14 @@ namespace QuanLyThuVien
             }
         }
 
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            if (_ct != null)
+            {
+                _ct.Cancel();
+                _ct.Dispose();
+                _ct = null;
+            }
+        }
     }
 }

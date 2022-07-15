@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace QuanLyThuVien.DAL
 {
@@ -15,31 +15,31 @@ namespace QuanLyThuVien.DAL
         public async Task<DataTable> loadData()
         {
             string _zQuery = "dbo.LoadAccount";
-            return await Task.Run(() => DataProvider.Instance.executeQueryAsync(_zQuery));
+            return await DataProvider.Instance.executeQueryAsync(_zQuery);
         }
 
         public async Task<DataTable> loadRole()
         {
             string _zQuery = "dbo.LoadRole";
-            return await Task.Run(() => DataProvider.Instance.executeQueryAsync(_zQuery));
+            return await DataProvider.Instance.executeQueryAsync(_zQuery);
         }
 
-        public async Task insertAccount(string pzUsername, string pzPassword, int pnRoleID)
+        public async Task insertAccount(string pzUsername, string pzPassword, int pnRoleID, CancellationToken pCt)
         {
             string _zQuery = "dbo.InsertAccount @username , @password , @idrole";
-            await Task.Run(() => DataProvider.Instance.executeNonQueryAsync(_zQuery, new object[] { pzUsername,pzPassword,pnRoleID }));
+            await DataProvider.Instance.executeNonQueryAsync(_zQuery, pCt, new object[] { pzUsername, pzPassword, pnRoleID });
         }
 
-        public async Task updateAccount(int pnId,string pzUsername, string pzPassword, int pnRoleID)
+        public async Task updateAccount(int pnId, string pzUsername, string pzPassword, int pnRoleID, CancellationToken pCt)
         {
             string _zQuery = "dbo.EditAccount @id , @username , @password , @idrole";
-            await Task.Run(() => DataProvider.Instance.executeNonQueryAsync(_zQuery, new object[] {pnId, pzUsername, pzPassword, pnRoleID }));
+            await DataProvider.Instance.executeNonQueryAsync(_zQuery, pCt, new object[] { pnId, pzUsername, pzPassword, pnRoleID });
         }
 
-        public async Task deleteAccount(int pnId)
+        public async Task deleteAccount(int pnId, CancellationToken pCt)
         {
             string _zQuery = "dbo.DeleteAccount @id";
-            await Task.Run(() => DataProvider.Instance.executeNonQueryAsync(_zQuery, new object[] { pnId }));
+            await DataProvider.Instance.executeNonQueryAsync(_zQuery, pCt, new object[] { pnId });
         }
     }
 }

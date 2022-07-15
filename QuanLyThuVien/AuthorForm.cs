@@ -9,6 +9,7 @@ using System.Linq;
 using System.Reflection;
 using System.Resources;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,10 +17,9 @@ namespace QuanLyThuVien
 {
     public partial class AuthorForm : Form
     {
-        private string zID;
-        private int nIndex = 0;
-
         private AuthorDAL _authorDAL = null;
+        private CancellationTokenSource _ct = null;
+
         public AuthorForm()
         {
             InitializeComponent();
@@ -31,144 +31,113 @@ namespace QuanLyThuVien
         {
             applyUIStrings();
         }
-        
-        private void dgvAuthor_CellClick(object sender, DataGridViewCellEventArgs e)
-        {
-            nIndex = e.RowIndex;
-
-            if (nIndex >= 0)
-                bindingData(nIndex);
-        }
-
-        private async Task addNew()
-        {
-            if (checkValid())
-            {
-                int _nSdt;
-
-                if (int.TryParse(txtPhone.Text, out _nSdt))
-                {
-                    await _authorDAL.insertAuthorAsync(txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text, Convert.ToDateTime(dtpDateofBirth.Value));
-                    await loadData();
-                }
-                else
-                {
-                    MessageBox.Show(QuanLyThuVien.Resource.InvalidValue);
-                }
-            }
-        }
-        
-        private async Task edit()
-        {
-            if (checkValid())
-            {
-                int _nsdt;
-                if (int.TryParse(txtPhone.Text, out _nsdt))
-                {
-                    await _authorDAL.updateAuthorAsync(Convert.ToInt32(zID),txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text, Convert.ToDateTime(dtpDateofBirth.Value));
-                    await loadData();
-                }
-                else
-                {
-                    MessageBox.Show(QuanLyThuVien.Resource.InvalidValue);
-                }
-            }
-        }
 
         private bool checkValid()
         {
-            if (string.IsNullOrEmpty(txtName.Text) ||
-                string.IsNullOrEmpty(txtAddress.Text) ||
-                string.IsNullOrEmpty(txtEmail.Text) ||
-                string.IsNullOrEmpty(txtPhone.Text))
-                return false;
             return true;
+            //return base.checkValid();
         }
 
         private void btnExcel_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.exportToExcel(dgvAuthor);
+            exportToExcel(dgvAuthor);
         }
 
         private async Task loadData()
         {
-            dgvAuthor.DataSource = await _authorDAL.loadData();
+            await _authorDAL.loadDataAsync();
         }
 
-        private void AuthorForm_Load_1(object sender, EventArgs e)
+        private void AuthorForm_Load(object sender, EventArgs e)
         {
             if (_authorDAL == null)
                 _authorDAL = new AuthorDAL();
-            BaseControl.Instance.runTask(loadData());
-        }
 
-        private void dgvAuthor_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Down)
+            loadData().ContinueWith((t) =>
             {
-                ++nIndex;
-                if (nIndex >= 0 && nIndex <= dgvAuthor.Rows.Count - 1)
-                    bindingData(nIndex);
-                else if (nIndex > dgvAuthor.Rows.Count - 1)
+                if (InvokeRequired)
                 {
-                    nIndex = dgvAuthor.Rows.Count - 1;
-                    bindingData(nIndex);
+                    Invoke((MethodInvoker)(() =>
+                    {
+                        bindingData(dgvAuthor);
+                        applyUIStrings();
+                    }));
                 }
-            }
-            else if (e.KeyCode == Keys.Up)
-            {
-                --nIndex;
-                if (nIndex >= 0 && nIndex <= dgvAuthor.Rows.Count - 1)
-                    bindingData(nIndex);
                 else
                 {
-                    nIndex = 0;
-                    bindingData(nIndex);
+                    bindingData(dgvAuthor);
+                    applyUIStrings();
                 }
-            }
+            });
         }
 
-        private void bindingData(int pnindex)
+        private void bindingData(DataGridView pDgv)
         {
-            DataGridViewRow row = dgvAuthor.Rows[pnindex];
-            zID = row.Cells[0].Value.ToString();
-            txtID.Text = zID;
-            txtName.Text = row.Cells[1].Value.ToString();
-            txtAddress.Text = row.Cells[3].Value.ToString();
-            txtEmail.Text = row.Cells[4].Value.ToString();
-            txtPhone.Text = row.Cells[5].Value.ToString();
-            dtpDateofBirth.Value = Convert.ToDateTime(row.Cells[2].Value.ToString());
+            //base.bindingData(dgvAuthor);
         }
 
 
         private void applyUIStrings()
         {
-            lblID.Text = QuanLyThuVien.Resource.lblID;
-            lblName.Text = QuanLyThuVien.Resource.lblName;
-            lblAddress.Text = QuanLyThuVien.Resource.lblAddress;
-            lblPhone.Text = QuanLyThuVien.Resource.lblPhone;
-            lblDateofBirth.Text = QuanLyThuVien.Resource.lblDateOfBirth;
-
-            if (dgvAuthor.Columns.Count > 0)
-            {
-                dgvAuthor.Columns[0].HeaderText = QuanLyThuVien.Resource.lblID;
-                dgvAuthor.Columns[1].HeaderText = QuanLyThuVien.Resource.lblName;
-                dgvAuthor.Columns[2].HeaderText = QuanLyThuVien.Resource.lblAddress;
-                dgvAuthor.Columns[3].HeaderText = "Email";
-                dgvAuthor.Columns[4].HeaderText = QuanLyThuVien.Resource.lblPhone;
-                dgvAuthor.Columns[5].HeaderText = QuanLyThuVien.Resource.lblDateOfBirth;
-            }
+            //base.applyUIStrings();
         }
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.runTask(addNew());
+            //if (checkValid())
+            //{
+            //    if (_ct == null)
+            //        _ct = new CancellationTokenSource();
+
+            //    if (int.TryParse(txtPhone.Text, out int _nSdt))
+            //    {
+            //        _authorDAL.insertAuthorAsync(txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text, Convert.ToDateTime(dtpDateofBirth.Value), _ct.Token).ContinueWith((t) => 
+            //        {
+            //            loadData();
+            //            _ct.Dispose();
+            //            _ct = null;
+            //        });
+
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show(QuanLyThuVien.Resource.InvalidValue);
+            //    }
+            //}
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            BaseControl.Instance.runTask(edit());
+            //if (checkValid())
+            //{
+            //    if (_ct == null)
+            //        _ct = new CancellationTokenSource();
+
+            //    if (int.TryParse(txtPhone.Text, out int _nSdt))
+            //    {
+            //        _authorDAL.updateAuthorAsync(Convert.ToInt32(txtID.Text), txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text, Convert.ToDateTime(dtpDateofBirth.Value), _ct.Token).ContinueWith((t) =>
+            //        {
+            //            loadData();
+            //            _ct.Dispose();
+            //            _ct = null;
+            //        });
+
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show(QuanLyThuVien.Resource.InvalidValue);
+            //    }
+            //}
         }
 
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            //base.btnCancel_Click(sender, e);
+        }
+
+        private void exportToExcel(DataGridView pDgv)
+        {
+            //base.exportToExcel(pDgv);
+        }
     }
 }
