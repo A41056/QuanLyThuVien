@@ -15,129 +15,121 @@ using System.Windows.Forms;
 
 namespace QuanLyThuVien
 {
-    public partial class AuthorForm : Form
+    public partial class AuthorForm : FormBase
     {
-        private AuthorDAL _authorDAL = null;
+        private AuthorDAL _authorDAL = new AuthorDAL();
         private CancellationTokenSource _ct = null;
 
         public AuthorForm()
         {
             InitializeComponent();
-
-            MainForm.onLanguageChanged += MainForm_onLanguageChanged;
-        }
-
-        private void MainForm_onLanguageChanged(object sender, EventArgs e)
-        {
-            applyUIStrings();
         }
 
         private bool checkValid()
         {
-            return true;
-            //return base.checkValid();
+
+            return checkValid();
         }
 
         private void btnExcel_Click(object sender, EventArgs e)
         {
-            exportToExcel(dgvAuthor);
+            btnExcel_Click(sender, e);
         }
 
-        private async Task loadData()
+        protected override async Task loadData()
         {
-            await _authorDAL.loadDataAsync();
+            dgvAuthor.DataSource = await _authorDAL.loadDataAsync();
+            await base.loadData();
         }
 
-        private void AuthorForm_Load(object sender, EventArgs e)
+        protected override void bindingData()
         {
-            if (_authorDAL == null)
-                _authorDAL = new AuthorDAL();
+            var _tb = dgvAuthor.DataSource as DataTable;
 
-            loadData().ContinueWith((t) =>
-            {
-                if (InvokeRequired)
-                {
-                    Invoke((MethodInvoker)(() =>
-                    {
-                        bindingData(dgvAuthor);
-                        applyUIStrings();
-                    }));
-                }
-                else
-                {
-                    bindingData(dgvAuthor);
-                    applyUIStrings();
-                }
-            });
+            txtID.DataBindings.Clear();
+            txtName.DataBindings.Clear();
+            txtPhone.DataBindings.Clear();
+            txtEmail.DataBindings.Clear();
+            txtAddress.DataBindings.Clear();
+
+            txtID.DataBindings.Add("Text", _tb, "ID");
+            txtName.DataBindings.Add("Text", _tb, "Name");
+            txtPhone.DataBindings.Add("Text", _tb, "Phone");
+            txtEmail.DataBindings.Add("Text", _tb, "Email");
+            txtAddress.DataBindings.Add("Text", _tb, "Address");
+            base.bindingData();
         }
 
-        private void bindingData(DataGridView pDgv)
+        protected override void applyUIStrings()
         {
-            //base.bindingData(dgvAuthor);
-        }
-
-
-        private void applyUIStrings()
-        {
-            //base.applyUIStrings();
+            lblID.Text = QuanLyThuVien.Resource.lblAuthorID;
+            lblName.Text = QuanLyThuVien.Resource.lblName;
+            lblAddress.Text = QuanLyThuVien.Resource.lblAddress;
+            lblPhone.Text = QuanLyThuVien.Resource.lblPhone;
+            lblDateofBirth.Text = QuanLyThuVien.Resource.lblPhone;
+            base.applyUIStrings();
         }
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            //if (checkValid())
-            //{
-            //    if (_ct == null)
-            //        _ct = new CancellationTokenSource();
+            if (checkValid())
+            {
+                if (_ct == null)
+                    _ct = new CancellationTokenSource();
 
-            //    if (int.TryParse(txtPhone.Text, out int _nSdt))
-            //    {
-            //        _authorDAL.insertAuthorAsync(txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text, Convert.ToDateTime(dtpDateofBirth.Value), _ct.Token).ContinueWith((t) => 
-            //        {
-            //            loadData();
-            //            _ct.Dispose();
-            //            _ct = null;
-            //        });
+                if (int.TryParse(txtPhone.Text, out int _nSdt))
+                {
+                    _authorDAL.insertAuthorAsync(txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text, Convert.ToDateTime(dtpDateofBirth.Value), _ct.Token).ContinueWith((t) =>
+                    {
+                        loadData();
+                        
+                    });
 
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show(QuanLyThuVien.Resource.InvalidValue);
-            //    }
-            //}
+                }
+                else
+                {
+                    MessageBox.Show(QuanLyThuVien.Resource.InvalidValue);
+                }
+                _ct.Dispose();
+                _ct = null;
+            }
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
         {
-            //if (checkValid())
-            //{
-            //    if (_ct == null)
-            //        _ct = new CancellationTokenSource();
+            if (checkValid())
+            {
+                if (_ct == null)
+                    _ct = new CancellationTokenSource();
 
-            //    if (int.TryParse(txtPhone.Text, out int _nSdt))
-            //    {
-            //        _authorDAL.updateAuthorAsync(Convert.ToInt32(txtID.Text), txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text, Convert.ToDateTime(dtpDateofBirth.Value), _ct.Token).ContinueWith((t) =>
-            //        {
-            //            loadData();
-            //            _ct.Dispose();
-            //            _ct = null;
-            //        });
+                if (int.TryParse(txtPhone.Text, out int _nSdt))
+                {
+                    _authorDAL.updateAuthorAsync(Convert.ToInt32(txtID.Text), txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text, Convert.ToDateTime(dtpDateofBirth.Value), _ct.Token).ContinueWith((t) =>
+                    {
+                        loadData();
 
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show(QuanLyThuVien.Resource.InvalidValue);
-            //    }
-            //}
+                        
+                    });
+
+                }
+                else
+                {
+                    MessageBox.Show(QuanLyThuVien.Resource.InvalidValue);
+                }
+
+                _ct.Dispose();
+                _ct = null;
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            //base.btnCancel_Click(sender, e);
+            btnCancel_Click(sender, e);
         }
 
         private void exportToExcel(DataGridView pDgv)
         {
-            //base.exportToExcel(pDgv);
+            exportToExcel(pDgv);
         }
     }
 }

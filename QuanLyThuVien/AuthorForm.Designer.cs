@@ -46,8 +46,14 @@ namespace QuanLyThuVien
             this.txtAddress = new System.Windows.Forms.TextBox();
             this.panelContainer = new System.Windows.Forms.TableLayoutPanel();
             this.dgvAuthor = new System.Windows.Forms.DataGridView();
+            this.childToolStrip = new System.Windows.Forms.ToolStrip();
+            this.btnNew = new System.Windows.Forms.ToolStripButton();
+            this.btnEdit = new System.Windows.Forms.ToolStripButton();
+            this.btnExcel = new System.Windows.Forms.ToolStripButton();
+            this.btnCancel = new System.Windows.Forms.ToolStripButton();
             this.panelContainer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAuthor)).BeginInit();
+            this.childToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // lblDateofBirth
@@ -202,14 +208,14 @@ namespace QuanLyThuVien
             this.panelContainer.Controls.Add(this.lblDateofBirth, 6, 1);
             this.panelContainer.Controls.Add(this.dtpDateofBirth, 6, 2);
             this.panelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelContainer.Location = new System.Drawing.Point(0, 0);
+            this.panelContainer.Location = new System.Drawing.Point(0, 27);
             this.panelContainer.Name = "panelContainer";
             this.panelContainer.RowCount = 4;
             this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.panelContainer.Size = new System.Drawing.Size(1409, 707);
+            this.panelContainer.Size = new System.Drawing.Size(1409, 680);
             this.panelContainer.TabIndex = 47;
             // 
             // dgvAuthor
@@ -262,6 +268,60 @@ namespace QuanLyThuVien
             this.dgvAuthor.Size = new System.Drawing.Size(1399, 614);
             this.dgvAuthor.TabIndex = 48;
             // 
+            // childToolStrip
+            // 
+            this.childToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.childToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.btnNew,
+            this.btnEdit,
+            this.btnExcel,
+            this.btnCancel});
+            this.childToolStrip.Location = new System.Drawing.Point(0, 0);
+            this.childToolStrip.Name = "childToolStrip";
+            this.childToolStrip.Size = new System.Drawing.Size(1409, 27);
+            this.childToolStrip.TabIndex = 49;
+            this.childToolStrip.Text = "toolStrip1";
+            // 
+            // btnNew
+            // 
+            this.btnNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnNew.Image = global::QuanLyThuVien.Properties.Resources.add1;
+            this.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnNew.Name = "btnNew";
+            this.btnNew.Size = new System.Drawing.Size(29, 24);
+            this.btnNew.Text = "toolStripButton1";
+            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
+            // 
+            // btnEdit
+            // 
+            this.btnEdit.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnEdit.Image = global::QuanLyThuVien.Properties.Resources.edit1;
+            this.btnEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnEdit.Name = "btnEdit";
+            this.btnEdit.Size = new System.Drawing.Size(29, 24);
+            this.btnEdit.Text = "toolStripButton2";
+            this.btnEdit.Click += new System.EventHandler(this.btnEdit_Click);
+            // 
+            // btnExcel
+            // 
+            this.btnExcel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnExcel.Image = global::QuanLyThuVien.Properties.Resources.export1;
+            this.btnExcel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnExcel.Name = "btnExcel";
+            this.btnExcel.Size = new System.Drawing.Size(29, 24);
+            this.btnExcel.Text = "toolStripButton3";
+            this.btnExcel.Click += new System.EventHandler(this.btnExcel_Click);
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.btnCancel.Image = global::QuanLyThuVien.Properties.Resources.cancel;
+            this.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(29, 24);
+            this.btnCancel.Text = "toolStripButton4";
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
             // AuthorForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -269,12 +329,14 @@ namespace QuanLyThuVien
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1409, 707);
             this.Controls.Add(this.panelContainer);
+            this.Controls.Add(this.childToolStrip);
             this.Name = "AuthorForm";
-            this.Load += new System.EventHandler(this.AuthorForm_Load);
-            this.Controls.SetChildIndex(this.panelContainer, 0);
+            //this.Load += new System.EventHandler(this.AuthorForm_Load);
             this.panelContainer.ResumeLayout(false);
             this.panelContainer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAuthor)).EndInit();
+            this.childToolStrip.ResumeLayout(false);
+            this.childToolStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -295,5 +357,10 @@ namespace QuanLyThuVien
         private System.Windows.Forms.TextBox txtAddress;
         private System.Windows.Forms.TableLayoutPanel panelContainer;
         private System.Windows.Forms.DataGridView dgvAuthor;
+        private System.Windows.Forms.ToolStrip childToolStrip;
+        private System.Windows.Forms.ToolStripButton btnNew;
+        private System.Windows.Forms.ToolStripButton btnEdit;
+        private System.Windows.Forms.ToolStripButton btnExcel;
+        private System.Windows.Forms.ToolStripButton btnCancel;
     }
 }

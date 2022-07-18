@@ -121,7 +121,7 @@ namespace QuanLyThuVien
             }
 
             ToolStripManager.RevertMerge("mainToolStrip");
-            ToolStripManager.Merge((ToolStrip)_pFrm.Controls.Find("childToolStrip",true).FirstOrDefault(),"mainToolStrip");
+            ToolStripManager.Merge((ToolStrip)_pFrm.Controls.Find("childToolStrip", true).FirstOrDefault(), "mainToolStrip");
             _pFrm.Controls.Find("childToolStrip", true).FirstOrDefault().Visible = false;
         }
 

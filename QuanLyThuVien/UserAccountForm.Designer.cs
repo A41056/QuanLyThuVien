@@ -260,7 +260,6 @@ namespace QuanLyThuVien
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "UserAccountForm";
             this.Text = "TaiKhoanForm";
-            this.Load += new System.EventHandler(this.UserAccountForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvAccount)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

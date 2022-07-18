@@ -289,7 +289,6 @@ namespace QuanLyThuVien
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "PublishCompanyForm";
             this.Text = "NhaXuatBanForm";
-            this.Load += new System.EventHandler(this.PublishingCompanyForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvPublisher)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

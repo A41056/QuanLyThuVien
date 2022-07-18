@@ -13,21 +13,15 @@ using System.Windows.Forms;
 
 namespace QuanLyThuVien
 {
-    public partial class UserAccountForm : Form
+    public partial class UserAccountForm : FormBase
     {
-        private UserAccountDAL userAccountDAL;
+        private UserAccountDAL userAccountDAL = new UserAccountDAL();
         private CancellationTokenSource _ct = null;
 
         public UserAccountForm()
         {
             InitializeComponent();
 
-            MainForm.onLanguageChanged += MainForm_onLanguageChanged;
-        }
-
-        private void MainForm_onLanguageChanged(object sender, EventArgs e)
-        {
-            applyUIStrings();
         }
 
         private bool checkValid()
@@ -43,39 +37,19 @@ namespace QuanLyThuVien
             //BaseControl.Instance.exportToExcel(dgvAccount);
         }
 
-        private void UserAccountForm_Load(object sender, EventArgs e)
-        {
-            if (userAccountDAL == null)
-                userAccountDAL = new UserAccountDAL();
-
-            loadData().ContinueWith((t) =>
-            {
-                if (InvokeRequired)
-                {
-                    Invoke((MethodInvoker)(() =>
-                    {
-                        bindingData();
-                        applyUIStrings();
-                    }));
-                }
-                else
-                {
-                    bindingData();
-                    applyUIStrings();
-                }
-            });
-        }
-        private async Task loadData()
+        protected override async Task loadData()
         {
             dgvAccount.DataSource = await userAccountDAL.loadData();
 
             cbRole.DataSource = await userAccountDAL.loadRole();
             cbRole.DisplayMember = "Name";
             cbRole.ValueMember = "ID";
+
+            await base.loadData();
         }
 
 
-        private void bindingData()
+        protected override void bindingData()
         {
             txtID.DataBindings.Clear();
             txtUsername.DataBindings.Clear();
@@ -86,6 +60,8 @@ namespace QuanLyThuVien
             txtUsername.DataBindings.Add("Text", (dgvAccount.DataSource as DataTable), "UserName");
             txtPassword.DataBindings.Add("Text", (dgvAccount.DataSource as DataTable), "Password");
             //cbRole.DataBindings.Add("Text", (dgvAccount.DataSource as DataTable), "RoleName");
+
+            base.bindingData();
         }
 
         string zRoleID;
@@ -142,7 +118,7 @@ namespace QuanLyThuVien
             });
         }
 
-        private void applyUIStrings()
+        protected override void applyUIStrings()
         {
             lblID.Text = QuanLyThuVien.Resource.lblID;
             lblName.Text = QuanLyThuVien.Resource.lblUserName;
@@ -156,6 +132,8 @@ namespace QuanLyThuVien
                 dgvAccount.Columns[2].HeaderText = QuanLyThuVien.Resource.lblPassword;
                 dgvAccount.Columns[3].HeaderText = QuanLyThuVien.Resource.lblRole;
             }
+
+            base.applyUIStrings();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

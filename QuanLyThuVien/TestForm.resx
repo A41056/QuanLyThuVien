@@ -117,4 +117,7 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="c1FlexGrid1.ColumnInfo" xml:space="preserve">
+    <value>10,1,0,0,0,-1,Columns:0{Caption:"STT";Style:"Format:""N2"";DataType:System.Int32;Font:Microsoft Sans Serif, 7.8pt;BackColor:0, 228, 0;Margins:1, 0, 0, 0;TextAlign:GeneralCenter;TextEffect:Flat;TextDirection:Normal;Trimming:None;";StyleFixed:"Font:Segoe UI, 10pt;ForeColor:WindowText;Margins:1, 0, 0, 0;TextEffect:Flat;TextDirection:Normal;Trimming:None;";}	1{Caption:"ID";Style:"Format:""N2"";";StyleFixed:"Font:Segoe UI, 10pt;Margins:1, 0, 0, 0;TextEffect:Flat;TextDirection:Normal;ImageAlign:CenterCenter;Trimming:None;";}	</value>
+  </data>
 </root>
