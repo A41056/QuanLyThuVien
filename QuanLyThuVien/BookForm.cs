@@ -18,7 +18,7 @@ using System.Windows.Forms;
 
 namespace QuanLyThuVien
 {
-    public partial class BookForm : Form
+    public partial class BookForm : FormBase
     {
         #region Properties
         private BookDAL _bookDAL = null;
@@ -32,17 +32,13 @@ namespace QuanLyThuVien
         private int nPageIndex = 1, nPageSize = 10, nTotalRecord = 36;
         private double nPageCount;
         #endregion
+
+
+        #region Methods
         public BookForm()
         {
             InitializeComponent();
-            MainForm.onLanguageChanged += MainForm_onLanguageChanged;
             dtpPublishDate.CustomFormat = CultureInfo.CurrentUICulture.DateTimeFormat.ShortDatePattern;
-        }
-
-        #region Methods
-        private void MainForm_onLanguageChanged(object sender, EventArgs e)
-        {
-            applyUIStrings();
         }
 
         private void BookForm_Load(object sender, EventArgs e)
@@ -50,23 +46,25 @@ namespace QuanLyThuVien
             if (_bookDAL == null)
                 _bookDAL = new BookDAL();
 
-
             updateControlState();
 
             try
             {
-                loadData(nPageIndex, nPageSize).ContinueWith(async (_taskToContinue) =>
+                Task.WhenAll(loadData(nPageIndex, nPageSize), loadTypeBook(), loadAuthor(), loadPublishCompany()).ContinueWith((_taskToContinue) =>
                 {
-                    if (dgvBook != null)
-                        (dgvBook.DataSource as DataTable).Columns[0].Unique = true;
-
-                    //nTotalRecord = Convert.ToInt32(await _bookDAL.getTotalRecord());
-
-                    loadAuthor();
-                    loadPublishCompany();
-                    loadTypeBook();
+                    if (_taskToContinue.IsFaulted)
+                    {
+                        MessageBox.Show(QuanLyThuVien.Resource.IsFaulted);
+                    }else if (_taskToContinue.IsCanceled)
+                    {
+                        MessageBox.Show(QuanLyThuVien.Resource.IsCanceled);
+                    }
+                    else
+                    {
+                        if (dgvBook != null)
+                            (dgvBook.DataSource as DataTable).Columns[0].Unique = true;
+                    }
                 });
-
             }
             catch (Exception ex)
             {
@@ -82,10 +80,12 @@ namespace QuanLyThuVien
             var _tb = await _bookDAL.loadDataPagingAsync(pnPageIndex, pnPageSize);
             dgvBook.DataSource = _tb;
 
+            nTotalRecord = Convert.ToInt32(await _bookDAL.getTotalRecord());
+
             btnPrevious.Enabled = true;
             btnNext.Enabled = true;
 
-            pagingCalculation(nPageSize);
+            pagingCalculation(pnPageSize);
             bindingData(_tb);
             applyUIStrings();
         }
@@ -98,6 +98,7 @@ namespace QuanLyThuVien
             cbBookType.DataSource = await _bookTypeDAL.loadData();
             cbBookType.DisplayMember = "Name";
             cbBookType.ValueMember = "Code";
+            
         }
 
         private async Task loadAuthor()
@@ -132,14 +133,15 @@ namespace QuanLyThuVien
 
             txtBookID.DataBindings.Add("Text", pDataSource, "Code", true, DataSourceUpdateMode.OnValidation);
             txtBookName.DataBindings.Add("Text", pDataSource, "Name", true);
-            cbAuthor.DataBindings.Add("Text", pDataSource, "Author Name", true, DataSourceUpdateMode.Never);
-            cbPublisher.DataBindings.Add("Text", pDataSource, "Publish Name", true, DataSourceUpdateMode.Never);
-            cbBookType.DataBindings.Add("Text", pDataSource, "Book Type Name", true, DataSourceUpdateMode.Never);
+            cbAuthor.DataBindings.Add("Text", pDataSource, "Author Name", true);
+            cbPublisher.DataBindings.Add("Text", pDataSource, "Publish Name", true);
+            cbBookType.DataBindings.Add("Text", pDataSource, "Book Type Name", true);
             dtpPublishDate.DataBindings.Add("Text", pDataSource, "PublishDate", false, DataSourceUpdateMode.OnPropertyChanged);
             txtAmout.DataBindings.Add("Text", pDataSource, "Amount", true, DataSourceUpdateMode.OnPropertyChanged);
+
         }
 
-        public async Task addNew()
+        private async Task addNew()
         {
             var _tb = dgvBook.DataSource as DataTable;
 
@@ -149,17 +151,19 @@ namespace QuanLyThuVien
                 {
                     if (_ct == null)
                         _ct = new CancellationTokenSource();
-
+                    
                     await _bookDAL.insertBookAsync
                         (_tb.Rows[dgvBook.CurrentCell.RowIndex].Field<string>("Code"),
                         _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<string>("Name"),
-                        Convert.ToInt32(cbPublisher.SelectedValue.ToString()),
-                        Convert.ToInt32(cbAuthor.SelectedValue.ToString()),
-                        cbBookType.SelectedValue.ToString(),
+                        _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<int>("Publish ID"),
+                        _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<int>("Author ID"),
+                        _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<string>("Book Type ID"),
                         _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<DateTime>("PublishDate"),
                         _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<int>("Amount"),
                         _ct.Token);
-                    nTotalRecord = Convert.ToInt32( await _bookDAL.getTotalRecord());
+
+                    nTotalRecord++;
+
                     await loadData(nPageIndex, nPageSize);
 
                     _ct.Dispose();
@@ -213,8 +217,10 @@ namespace QuanLyThuVien
                     _ct = new CancellationTokenSource();
 
                 await _bookDAL.deleteBookAsync(_tb.Rows[dgvBook.CurrentCell.RowIndex].Field<string>("Code"), _ct.Token);
-                nTotalRecord = Convert.ToInt32(await _bookDAL.getTotalRecord());
-                await loadData(nPageIndex, nPageSize);
+                
+                nTotalRecord--;
+
+                await loadData(1, nPageSize);
 
                 _ct.Dispose();
                 _ct = null;
@@ -225,7 +231,7 @@ namespace QuanLyThuVien
             }
         }
 
-        public bool checkValid()
+        private bool checkValid()
         {
             if (string.IsNullOrEmpty(txtBookID.Text) ||
                 string.IsNullOrEmpty(txtBookName.Text) ||
@@ -235,7 +241,7 @@ namespace QuanLyThuVien
             return true;
         }
 
-        private void applyUIStrings()
+        protected override void applyUIStrings()
         {
             lblID.Text = QuanLyThuVien.Resource.lblBookCode;
             lblName.Text = QuanLyThuVien.Resource.lblName;
@@ -262,6 +268,7 @@ namespace QuanLyThuVien
                 dgvBook.Columns[10].HeaderText = QuanLyThuVien.Resource.lblInventoryID;
                 dgvBook.Columns[11].HeaderText = QuanLyThuVien.Resource.lblAmout;
             }
+            base.applyUIStrings();
         }
 
         #endregion Methods
@@ -320,6 +327,7 @@ namespace QuanLyThuVien
         {
             //BaseControl.Instance.exportToExcel(dgvBook);
         }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             if (_ct != null)
@@ -428,35 +436,47 @@ namespace QuanLyThuVien
         private void btnPrevious_Click(object sender, EventArgs e)
         {
             if (nPageIndex == 1)
+            { 
                 return;
+            }
             else
-                updatePaging(--nPageIndex, nPageSize);
+            {
+                nPageIndex--;
+                pagingCalculation(nPageSize);
+                loadData(nPageIndex, nPageSize);
+            }
         }
             
         private void btnNext_Click(object sender, EventArgs e)
         {
             if (nPageIndex >= nPageCount)
+            {
                 return;
+            }
             else
-                updatePaging(++nPageIndex, nPageSize);
+            {
+                nPageIndex++;
+                pagingCalculation(nPageSize);
+                loadData(nPageIndex, nPageSize);
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            TestForm testForm = new TestForm();
+            testForm.ShowDialog();
         }
 
         private void btn5_Click(object sender, EventArgs e)
         {
             nPageIndex = 1;
-            updatePaging(1, 5);
-        }
 
-        private void btn10_Click(object sender, EventArgs e)
-        {
-            nPageIndex = 1;
-            updatePaging(1, 10);
-        }
+            var _btn = sender as Button;
+            if (_btn == null || !_btn.Name.StartsWith("btn"))
+                return;
 
-        private void btn15_Click(object sender, EventArgs e)
-        {
-            nPageIndex = 1;
-            updatePaging(1, 15);
+            pagingCalculation(int.Parse(_btn.Name.Substring("btn".Length)));
+            loadData(1, int.Parse(_btn.Name.Substring("btn".Length)));
         }
 
         private void pagingCalculation(int pnPageSize)
@@ -464,17 +484,9 @@ namespace QuanLyThuVien
             nPageSize = pnPageSize;
             nPageCount = Math.Ceiling((double)((decimal)nTotalRecord / pnPageSize));
             lblTotalRecord.Text = "|  " + nPageCount.ToString();
+            lblPageIndex.Text = nPageIndex.ToString();
         }
 
-        private void updatePaging(int pnPageIndex, int pnPageSize)
-        {
-            nPageSize = pnPageSize;
-
-            lblPageIndex.Text = pnPageIndex.ToString();
-
-            pagingCalculation(nPageSize);
-            loadData(pnPageIndex, nPageSize);
-        }
         #endregion Paging
     }
 }

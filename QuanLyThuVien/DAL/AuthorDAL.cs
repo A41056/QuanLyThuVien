@@ -19,7 +19,6 @@ namespace QuanLyThuVien.DAL
             return await base.loadDataAsync();
         }
 
-
         public async Task insertAuthorAsync(string pzName, string pzAddress, string pzEmail, string pzPhone, DateTime pDtpBirth, CancellationToken pCt)
         {
             string _zQuery = "dbo.InsertAuthor @name , @address , @email , @phone , @birth";

@@ -294,7 +294,6 @@ namespace QuanLyThuVien
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "ReaderForm";
             this.Text = "66";
-            this.Load += new System.EventHandler(this.ReaderForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvReader)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();

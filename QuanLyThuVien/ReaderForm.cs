@@ -13,52 +13,24 @@ using System.Windows.Forms;
 
 namespace QuanLyThuVien
 {
-    public partial class ReaderForm : Form
+    public partial class ReaderForm : FormBase
     {
-        private ReaderDAL readerDAL;
+        private ReaderDAL readerDAL = new ReaderDAL();
         private CancellationTokenSource _ct = null;
 
         public ReaderForm()
         {
             InitializeComponent();
-
-            MainForm.onLanguageChanged += MainForm_onLanguageChanged;
         }
-
-        private void MainForm_onLanguageChanged(object sender, EventArgs e)
-        {
-            applyUIStrings();
-        }
-        
-        private void ReaderForm_Load(object sender, EventArgs e)
+        protected override async Task loadData()
         {
             if (readerDAL == null)
                 readerDAL = new ReaderDAL();
-
-            loadData().ContinueWith((t) =>
-            {
-                if (InvokeRequired)
-                {
-                    Invoke((MethodInvoker)(() =>
-                    {
-                        bindingData();
-                        applyUIStrings();
-                    }));
-                }
-                else
-                {
-                    bindingData();
-                    applyUIStrings();
-                }
-            });
-            
-        }
-        private async Task loadData()
-        {
             dgvReader.DataSource = await readerDAL.loadData();
+            await base.loadData();
         }
 
-        private void bindingData()
+        protected override void bindingData()
         {
             txtID.DataBindings.Clear();
             txtName.DataBindings.Clear();
@@ -71,6 +43,7 @@ namespace QuanLyThuVien
             txtPhone.DataBindings.Add("Text", (dgvReader.DataSource as DataTable), "Phone");
             txtEmail.DataBindings.Add("Text", (dgvReader.DataSource as DataTable), "Email");
             txtAddress.DataBindings.Add("Text", (dgvReader.DataSource as DataTable), "Address");
+            base.bindingData();        
         }
 
         private bool checkValid()
@@ -88,7 +61,7 @@ namespace QuanLyThuVien
             //BaseControl.Instance.exportToExcel(dgvReader);
         }
         
-        private void applyUIStrings()
+        protected override void applyUIStrings()
         {
             lblID.Text = QuanLyThuVien.Resource.lblID;
             lblName.Text = QuanLyThuVien.Resource.lblName;
@@ -103,6 +76,7 @@ namespace QuanLyThuVien
                 dgvReader.Columns[2].HeaderText = "Email";
                 dgvReader.Columns[3].HeaderText = QuanLyThuVien.Resource.lblPhone;
             }
+            base.applyUIStrings();
         }
 
         private void btnNew_Click(object sender, EventArgs e)

@@ -13,21 +13,16 @@ using System.Windows.Forms;
 
 namespace QuanLyThuVien
 {
-    public partial class PublishCompanyForm : Form
+    public partial class PublishCompanyForm : FormBase
     {
-        private PublishDAL publishDAL;
+        private PublishDAL publishDAL = new PublishDAL();
         private CancellationTokenSource _ct = null;
 
         public PublishCompanyForm()
         {
             InitializeComponent();
-            MainForm.onLanguageChanged += MainForm_onLanguageChanged;
         }
 
-        private void MainForm_onLanguageChanged(object sender, EventArgs e)
-        {
-            applyUIStrings();
-        }
 
         private bool checkValid()
         {
@@ -44,35 +39,16 @@ namespace QuanLyThuVien
             //BaseControl.Instance.exportToExcel(dgvPublisher);
         }
 
-        private void PublishingCompanyForm_Load(object sender, EventArgs e)
+
+        protected override async Task loadData()
         {
             if (publishDAL == null)
                 publishDAL = new PublishDAL();
-
-            loadData().ContinueWith((t) => 
-            {
-                if (InvokeRequired)
-                {
-                    Invoke((MethodInvoker)(() =>
-                    {
-                        bindingData();
-                        applyUIStrings();
-                    }));
-                }
-                else
-                {
-                    bindingData();
-                    applyUIStrings();
-                }
-            });
-        }
-
-        private async Task loadData()
-        {
             dgvPublisher.DataSource = await publishDAL.loadData();
+            await base.loadData();
         }
 
-        private void bindingData()
+        protected override void bindingData()
         {
             txtID.DataBindings.Clear();
             txtName.DataBindings.Clear();
@@ -85,9 +61,11 @@ namespace QuanLyThuVien
             txtPhone.DataBindings.Add("Text", (dgvPublisher.DataSource as DataTable), "Phone");
             txtEmail.DataBindings.Add("Text", (dgvPublisher.DataSource as DataTable), "Email");
             txtAddress.DataBindings.Add("Text", (dgvPublisher.DataSource as DataTable), "Address");
+
+            base.bindingData();
         }
 
-        private void applyUIStrings()
+        protected override void applyUIStrings()
         {
             lblID.Text = QuanLyThuVien.Resource.lblID;
             lbName.Text = QuanLyThuVien.Resource.lblName;
@@ -102,6 +80,8 @@ namespace QuanLyThuVien
                 dgvPublisher.Columns[3].HeaderText = "Email";
                 dgvPublisher.Columns[4].HeaderText = QuanLyThuVien.Resource.lblPhone;
             }
+
+            base.applyUIStrings();
         }
 
 

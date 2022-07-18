@@ -47,8 +47,8 @@ namespace QuanLyThuVien
             this.cbBookType = new System.Windows.Forms.ComboBox();
             this.dtpPublishDate = new System.Windows.Forms.DateTimePicker();
             this.lblPublishDate = new System.Windows.Forms.Label();
-            this.dgvBook = new System.Windows.Forms.DataGridView();
             this.panelContainer = new System.Windows.Forms.TableLayoutPanel();
+            this.dgvBook = new System.Windows.Forms.DataGridView();
             this.PagingNavigation = new System.Windows.Forms.FlowLayoutPanel();
             this.btnPrevious = new System.Windows.Forms.Button();
             this.lblPageIndex = new System.Windows.Forms.Label();
@@ -58,14 +58,15 @@ namespace QuanLyThuVien
             this.btn10 = new System.Windows.Forms.Button();
             this.btn15 = new System.Windows.Forms.Button();
             this.lblPerpage = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.childToolStrip = new System.Windows.Forms.ToolStrip();
             this.btnNew = new System.Windows.Forms.ToolStripButton();
             this.btnEdit = new System.Windows.Forms.ToolStripButton();
             this.btnDelete = new System.Windows.Forms.ToolStripButton();
             this.btnCancel = new System.Windows.Forms.ToolStripButton();
             this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvBook)).BeginInit();
             this.panelContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvBook)).BeginInit();
             this.PagingNavigation.SuspendLayout();
             this.childToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider)).BeginInit();
@@ -141,6 +142,7 @@ namespace QuanLyThuVien
             // 
             // cbPublisher
             // 
+            this.cbPublisher.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbPublisher.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbPublisher.FormattingEnabled = true;
             this.cbPublisher.Location = new System.Drawing.Point(415, 38);
@@ -176,6 +178,7 @@ namespace QuanLyThuVien
             // 
             // cbAuthor
             // 
+            this.cbAuthor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbAuthor.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbAuthor.FormattingEnabled = true;
             this.cbAuthor.Location = new System.Drawing.Point(620, 38);
@@ -199,6 +202,7 @@ namespace QuanLyThuVien
             // 
             // cbBookType
             // 
+            this.cbBookType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbBookType.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbBookType.FormattingEnabled = true;
             this.cbBookType.Location = new System.Drawing.Point(825, 38);
@@ -230,6 +234,52 @@ namespace QuanLyThuVien
             this.lblPublishDate.Size = new System.Drawing.Size(195, 23);
             this.lblPublishDate.TabIndex = 13;
             this.lblPublishDate.Text = "Ngày xuất bản";
+            // 
+            // panelContainer
+            // 
+            this.panelContainer.AutoSize = true;
+            this.panelContainer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.panelContainer.ColumnCount = 9;
+            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.panelContainer.Controls.Add(this.lblAmount, 7, 1);
+            this.panelContainer.Controls.Add(this.txtAmout, 7, 2);
+            this.panelContainer.Controls.Add(this.dgvBook, 1, 4);
+            this.panelContainer.Controls.Add(this.txtBookName, 2, 2);
+            this.panelContainer.Controls.Add(this.dtpPublishDate, 6, 2);
+            this.panelContainer.Controls.Add(this.cbPublisher, 3, 2);
+            this.panelContainer.Controls.Add(this.txtBookID, 1, 2);
+            this.panelContainer.Controls.Add(this.lblID, 1, 1);
+            this.panelContainer.Controls.Add(this.cbBookType, 5, 2);
+            this.panelContainer.Controls.Add(this.cbAuthor, 4, 2);
+            this.panelContainer.Controls.Add(this.lblPublishDate, 6, 1);
+            this.panelContainer.Controls.Add(this.lblName, 2, 1);
+            this.panelContainer.Controls.Add(this.lblBookType, 5, 1);
+            this.panelContainer.Controls.Add(this.lblPublish, 3, 1);
+            this.panelContainer.Controls.Add(this.lblAuthor, 4, 1);
+            this.panelContainer.Controls.Add(this.PagingNavigation, 1, 5);
+            this.panelContainer.Controls.Add(this.button1, 4, 5);
+            this.panelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelContainer.Location = new System.Drawing.Point(0, 0);
+            this.panelContainer.Name = "panelContainer";
+            this.panelContainer.RowCount = 8;
+            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 75F));
+            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.panelContainer.Size = new System.Drawing.Size(1645, 917);
+            this.panelContainer.TabIndex = 23;
             // 
             // dgvBook
             // 
@@ -281,51 +331,6 @@ namespace QuanLyThuVien
             this.dgvBook.Size = new System.Drawing.Size(1658, 731);
             this.dgvBook.TabIndex = 8;
             this.dgvBook.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgvBook_DataError);
-            // 
-            // panelContainer
-            // 
-            this.panelContainer.AutoSize = true;
-            this.panelContainer.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.panelContainer.ColumnCount = 9;
-            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.panelContainer.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
-            this.panelContainer.Controls.Add(this.lblAmount, 7, 1);
-            this.panelContainer.Controls.Add(this.txtAmout, 7, 2);
-            this.panelContainer.Controls.Add(this.dgvBook, 1, 4);
-            this.panelContainer.Controls.Add(this.txtBookName, 2, 2);
-            this.panelContainer.Controls.Add(this.dtpPublishDate, 6, 2);
-            this.panelContainer.Controls.Add(this.cbPublisher, 3, 2);
-            this.panelContainer.Controls.Add(this.txtBookID, 1, 2);
-            this.panelContainer.Controls.Add(this.lblID, 1, 1);
-            this.panelContainer.Controls.Add(this.cbBookType, 5, 2);
-            this.panelContainer.Controls.Add(this.cbAuthor, 4, 2);
-            this.panelContainer.Controls.Add(this.lblPublishDate, 6, 1);
-            this.panelContainer.Controls.Add(this.lblName, 2, 1);
-            this.panelContainer.Controls.Add(this.lblBookType, 5, 1);
-            this.panelContainer.Controls.Add(this.lblPublish, 3, 1);
-            this.panelContainer.Controls.Add(this.lblAuthor, 4, 1);
-            this.panelContainer.Controls.Add(this.PagingNavigation, 1, 5);
-            this.panelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelContainer.Location = new System.Drawing.Point(0, 0);
-            this.panelContainer.Name = "panelContainer";
-            this.panelContainer.RowCount = 8;
-            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 75F));
-            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.panelContainer.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.panelContainer.Size = new System.Drawing.Size(1645, 917);
-            this.panelContainer.TabIndex = 23;
             // 
             // PagingNavigation
             // 
@@ -430,7 +435,7 @@ namespace QuanLyThuVien
             this.btn10.TabIndex = 5;
             this.btn10.Text = "10";
             this.btn10.UseVisualStyleBackColor = true;
-            this.btn10.Click += new System.EventHandler(this.btn10_Click);
+            this.btn10.Click += new System.EventHandler(this.btn5_Click);
             // 
             // btn15
             // 
@@ -446,7 +451,7 @@ namespace QuanLyThuVien
             this.btn15.TabIndex = 6;
             this.btn15.Text = "15";
             this.btn15.UseVisualStyleBackColor = true;
-            this.btn15.Click += new System.EventHandler(this.btn15_Click);
+            this.btn15.Click += new System.EventHandler(this.btn5_Click);
             // 
             // lblPerpage
             // 
@@ -461,6 +466,16 @@ namespace QuanLyThuVien
             this.lblPerpage.TabIndex = 7;
             this.lblPerpage.Text = "Per page";
             this.lblPerpage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(618, 818);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 15;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // childToolStrip
             // 
@@ -532,9 +547,9 @@ namespace QuanLyThuVien
             this.Name = "BookForm";
             this.Text = "1";
             this.Load += new System.EventHandler(this.BookForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvBook)).EndInit();
             this.panelContainer.ResumeLayout(false);
             this.panelContainer.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvBook)).EndInit();
             this.PagingNavigation.ResumeLayout(false);
             this.PagingNavigation.PerformLayout();
             this.childToolStrip.ResumeLayout(false);
@@ -561,7 +576,6 @@ namespace QuanLyThuVien
         private System.Windows.Forms.ComboBox cbBookType;
         private System.Windows.Forms.DateTimePicker dtpPublishDate;
         private System.Windows.Forms.Label lblPublishDate;
-        private System.Windows.Forms.DataGridView dgvBook;
         private System.Windows.Forms.TableLayoutPanel panelContainer;
         private System.Windows.Forms.ToolStrip childToolStrip;
         private System.Windows.Forms.ToolStripButton btnNew;
@@ -578,5 +592,7 @@ namespace QuanLyThuVien
         private System.Windows.Forms.Button btn10;
         private System.Windows.Forms.Button btn15;
         private System.Windows.Forms.Label lblPerpage;
+        private System.Windows.Forms.DataGridView dgvBook;
+        private System.Windows.Forms.Button button1;
     }
 }
