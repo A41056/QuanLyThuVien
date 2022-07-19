@@ -32,8 +32,6 @@ namespace QuanLyThuVien
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.lblDateofBirth = new System.Windows.Forms.Label();
-            this.dtpDateofBirth = new System.Windows.Forms.DateTimePicker();
             this.lblPhone = new System.Windows.Forms.Label();
             this.lbl = new System.Windows.Forms.Label();
             this.lblAddress = new System.Windows.Forms.Label();
@@ -55,26 +53,6 @@ namespace QuanLyThuVien
             ((System.ComponentModel.ISupportInitialize)(this.dgvAuthor)).BeginInit();
             this.childToolStrip.SuspendLayout();
             this.SuspendLayout();
-            // 
-            // lblDateofBirth
-            // 
-            this.lblDateofBirth.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDateofBirth.AutoSize = true;
-            this.lblDateofBirth.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblDateofBirth.Location = new System.Drawing.Point(1063, 20);
-            this.lblDateofBirth.Name = "lblDateofBirth";
-            this.lblDateofBirth.Size = new System.Drawing.Size(211, 23);
-            this.lblDateofBirth.TabIndex = 36;
-            this.lblDateofBirth.Text = "Ngày sinh";
-            // 
-            // dtpDateofBirth
-            // 
-            this.dtpDateofBirth.Font = new System.Drawing.Font("Segoe UI Semibold", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.dtpDateofBirth.Location = new System.Drawing.Point(1065, 48);
-            this.dtpDateofBirth.Margin = new System.Windows.Forms.Padding(5);
-            this.dtpDateofBirth.Name = "dtpDateofBirth";
-            this.dtpDateofBirth.Size = new System.Drawing.Size(207, 30);
-            this.dtpDateofBirth.TabIndex = 6;
             // 
             // lblPhone
             // 
@@ -205,8 +183,6 @@ namespace QuanLyThuVien
             this.panelContainer.Controls.Add(this.txtEmail, 4, 2);
             this.panelContainer.Controls.Add(this.lblPhone, 5, 1);
             this.panelContainer.Controls.Add(this.txtPhone, 5, 2);
-            this.panelContainer.Controls.Add(this.lblDateofBirth, 6, 1);
-            this.panelContainer.Controls.Add(this.dtpDateofBirth, 6, 2);
             this.panelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContainer.Location = new System.Drawing.Point(0, 27);
             this.panelContainer.Name = "panelContainer";
@@ -250,6 +226,7 @@ namespace QuanLyThuVien
             this.dgvAuthor.Location = new System.Drawing.Point(5, 88);
             this.dgvAuthor.Margin = new System.Windows.Forms.Padding(5);
             this.dgvAuthor.Name = "dgvAuthor";
+            this.dgvAuthor.ReadOnly = true;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle3.Font = new System.Drawing.Font("Segoe UI Semibold", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -331,7 +308,6 @@ namespace QuanLyThuVien
             this.Controls.Add(this.panelContainer);
             this.Controls.Add(this.childToolStrip);
             this.Name = "AuthorForm";
-            //this.Load += new System.EventHandler(this.AuthorForm_Load);
             this.panelContainer.ResumeLayout(false);
             this.panelContainer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAuthor)).EndInit();
@@ -343,8 +319,6 @@ namespace QuanLyThuVien
         }
 
         #endregion
-        private System.Windows.Forms.Label lblDateofBirth;
-        private System.Windows.Forms.DateTimePicker dtpDateofBirth;
         private System.Windows.Forms.Label lblPhone;
         private System.Windows.Forms.Label lbl;
         private System.Windows.Forms.Label lblAddress;

@@ -251,6 +251,7 @@ namespace QuanLyThuVien
             this.dgvBorrow.EnableHeadersVisualStyles = false;
             this.dgvBorrow.Location = new System.Drawing.Point(3, 90);
             this.dgvBorrow.Name = "dgvBorrow";
+            this.dgvBorrow.ReadOnly = true;
             this.dgvBorrow.RowHeadersVisible = false;
             this.dgvBorrow.RowHeadersWidth = 51;
             this.dgvBorrow.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
@@ -356,7 +357,6 @@ namespace QuanLyThuVien
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "BorrowForm";
             this.Text = "MuonSachForm";
-            this.Load += new System.EventHandler(this.BorrowForm_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBorrow)).EndInit();

@@ -23,7 +23,6 @@ namespace QuanLyThuVien
             InitializeComponent();
         }
 
-
         private bool checkValid()
         {
             if (String.IsNullOrEmpty(txtName.Text) ||
@@ -44,7 +43,11 @@ namespace QuanLyThuVien
         {
             if (publishDAL == null)
                 publishDAL = new PublishDAL();
-            dgvPublisher.DataSource = await publishDAL.loadData();
+
+            if (_ct == null)
+                _ct = new CancellationTokenSource();
+
+            dgvPublisher.DataSource = await publishDAL.loadDataAsync(_ct.Token);
             await base.loadData();
         }
 

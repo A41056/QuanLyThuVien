@@ -17,7 +17,7 @@ namespace QuanLyThuVien
 {
     public partial class AuthorForm : FormBase
     {
-        private AuthorDAL _authorDAL = new AuthorDAL();
+        private AuthorDAL _authorDAL;
         private CancellationTokenSource _ct = null;
 
         public AuthorForm()
@@ -27,20 +27,27 @@ namespace QuanLyThuVien
 
         private bool checkValid()
         {
-
-            return checkValid();
+            return true;
         }
 
         private void btnExcel_Click(object sender, EventArgs e)
         {
-            btnExcel_Click(sender, e);
+            exportToExcel(dgvAuthor);
         }
 
         protected override async Task loadData()
         {
-            dgvAuthor.DataSource = await _authorDAL.loadDataAsync();
+            if (_ct == null)
+                _ct = new CancellationTokenSource();
+
+            if (_authorDAL == null)
+                _authorDAL = new AuthorDAL();
+
+            dgvAuthor.DataSource = await _authorDAL.loadDataAsync(_ct.Token);
+            
             await base.loadData();
         }
+        
 
         protected override void bindingData()
         {
@@ -66,7 +73,6 @@ namespace QuanLyThuVien
             lblName.Text = QuanLyThuVien.Resource.lblName;
             lblAddress.Text = QuanLyThuVien.Resource.lblAddress;
             lblPhone.Text = QuanLyThuVien.Resource.lblPhone;
-            lblDateofBirth.Text = QuanLyThuVien.Resource.lblPhone;
             base.applyUIStrings();
         }
 
@@ -79,12 +85,10 @@ namespace QuanLyThuVien
 
                 if (int.TryParse(txtPhone.Text, out int _nSdt))
                 {
-                    _authorDAL.insertAuthorAsync(txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text, Convert.ToDateTime(dtpDateofBirth.Value), _ct.Token).ContinueWith((t) =>
+                    _authorDAL.insertAsync(txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text, _ct.Token).ContinueWith((t) =>
                     {
                         loadData();
-                        
                     });
-
                 }
                 else
                 {
@@ -104,13 +108,10 @@ namespace QuanLyThuVien
 
                 if (int.TryParse(txtPhone.Text, out int _nSdt))
                 {
-                    _authorDAL.updateAuthorAsync(Convert.ToInt32(txtID.Text), txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text, Convert.ToDateTime(dtpDateofBirth.Value), _ct.Token).ContinueWith((t) =>
+                    _authorDAL.updateAsync(Convert.ToInt32(txtID.Text), txtName.Text, txtAddress.Text, txtEmail.Text, txtPhone.Text, _ct.Token).ContinueWith((t) =>
                     {
                         loadData();
-
-                        
                     });
-
                 }
                 else
                 {
@@ -124,12 +125,17 @@ namespace QuanLyThuVien
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            btnCancel_Click(sender, e);
+            if (_ct != null)
+            {
+                _ct.Cancel();
+                _ct.Dispose();
+                _ct = null;
+            }
         }
 
         private void exportToExcel(DataGridView pDgv)
         {
-            exportToExcel(pDgv);
+
         }
     }
 }

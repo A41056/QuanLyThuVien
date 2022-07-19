@@ -15,7 +15,8 @@ namespace QuanLyThuVien
 {
     public partial class ReaderForm : FormBase
     {
-        private ReaderDAL readerDAL = new ReaderDAL();
+        private ReaderDAL readerDAL;
+
         private CancellationTokenSource _ct = null;
 
         public ReaderForm()
@@ -26,7 +27,12 @@ namespace QuanLyThuVien
         {
             if (readerDAL == null)
                 readerDAL = new ReaderDAL();
-            dgvReader.DataSource = await readerDAL.loadData();
+
+            if (_ct == null)
+                _ct = new CancellationTokenSource();
+
+            dgvReader.DataSource = await readerDAL.loadDataAsync(_ct.Token);
+
             await base.loadData();
         }
 
@@ -96,7 +102,6 @@ namespace QuanLyThuVien
                     _ct.Dispose();
                     _ct = null;
                 });
-
             }
         }
 
@@ -117,7 +122,6 @@ namespace QuanLyThuVien
                     _ct.Dispose();
                     _ct = null;
                 });
-
             }
         }
 

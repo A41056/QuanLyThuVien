@@ -8,14 +8,14 @@ using System.Threading.Tasks;
 
 namespace QuanLyThuVien.DAL
 {
-    public class ReaderDAL
+    public class ReaderDAL : BaseDAL
     {
         public ReaderDAL() { }
 
-        public async Task<DataTable> loadData()
+        protected override string zProceduceName {get => "dbo.LoadReader";}        
+        public override async Task<DataTable> loadDataAsync(CancellationToken pCt)
         {
-            string _zQuery = "dbo.LoadReader";
-            return await DataProvider.Instance.executeQueryAsync(_zQuery);
+            return await base.loadDataAsync(pCt);
         }
 
         public async Task insertReader(string pzName, string pzAddress, string pzEmail, string pzPhone, CancellationToken pCt)

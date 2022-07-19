@@ -49,8 +49,8 @@ namespace QuanLyThuVien
             this.btnNew = new System.Windows.Forms.ToolStripButton();
             this.btnEdit = new System.Windows.Forms.ToolStripButton();
             this.btnExport = new System.Windows.Forms.ToolStripButton();
-            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.btnCancel = new System.Windows.Forms.ToolStripButton();
+            this.errorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.dgvReader)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
             this.childToolStrip.SuspendLayout();
@@ -109,6 +109,7 @@ namespace QuanLyThuVien
             this.dgvReader.EnableHeadersVisualStyles = false;
             this.dgvReader.Location = new System.Drawing.Point(3, 70);
             this.dgvReader.Name = "dgvReader";
+            this.dgvReader.ReadOnly = true;
             this.dgvReader.RowHeadersVisible = false;
             this.dgvReader.RowHeadersWidth = 51;
             this.dgvReader.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
@@ -269,11 +270,6 @@ namespace QuanLyThuVien
             this.btnExport.Text = "toolStripButton3";
             this.btnExport.Click += new System.EventHandler(this.btnExcel_Click);
             // 
-            // errorProvider
-            // 
-            this.errorProvider.ContainerControl = this;
-            this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
-            // 
             // btnCancel
             // 
             this.btnCancel.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -283,6 +279,11 @@ namespace QuanLyThuVien
             this.btnCancel.Size = new System.Drawing.Size(29, 24);
             this.btnCancel.Text = "Cancel";
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // errorProvider
+            // 
+            this.errorProvider.ContainerControl = this;
+            this.errorProvider.Icon = ((System.Drawing.Icon)(resources.GetObject("errorProvider.Icon")));
             // 
             // ReaderForm
             // 

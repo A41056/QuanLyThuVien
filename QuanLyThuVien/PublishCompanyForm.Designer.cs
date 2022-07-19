@@ -112,6 +112,7 @@ namespace QuanLyThuVien
             this.dgvPublisher.EnableHeadersVisualStyles = false;
             this.dgvPublisher.Location = new System.Drawing.Point(3, 70);
             this.dgvPublisher.Name = "dgvPublisher";
+            this.dgvPublisher.ReadOnly = true;
             this.dgvPublisher.RowHeadersVisible = false;
             this.dgvPublisher.RowHeadersWidth = 51;
             this.dgvPublisher.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;

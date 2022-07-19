@@ -8,14 +8,15 @@ using System.Threading.Tasks;
 
 namespace QuanLyThuVien.DAL
 {
-    public class BookTypeDAL
+    public class BookTypeDAL : BaseDAL
     {
         public BookTypeDAL() { }
 
-        public async Task<DataTable> loadData()
+        protected override string zProceduceName => "dbo.LoadBookType";
+        public async Task<DataTable> loadData(CancellationToken pCt)
         {
-            string _zQuery = "dbo.LoadBookType";
-            return await DataProvider.Instance.executeQueryAsync(_zQuery);
+            await DataProvider.Instance.executeQuerySelectAsync(zProceduceName, pCt);
+            return await base.loadDataAsync(pCt);
         }
 
         public async Task insertBookType(string pzCode, string pzName, CancellationToken pCt)

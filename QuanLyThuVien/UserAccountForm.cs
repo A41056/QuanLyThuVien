@@ -15,13 +15,12 @@ namespace QuanLyThuVien
 {
     public partial class UserAccountForm : FormBase
     {
-        private UserAccountDAL userAccountDAL = new UserAccountDAL();
+        private UserAccountDAL userAccountDAL = null;
         private CancellationTokenSource _ct = null;
 
         public UserAccountForm()
         {
             InitializeComponent();
-
         }
 
         private bool checkValid()
@@ -39,9 +38,15 @@ namespace QuanLyThuVien
 
         protected override async Task loadData()
         {
-            dgvAccount.DataSource = await userAccountDAL.loadData();
+            if (userAccountDAL == null)
+                userAccountDAL = new UserAccountDAL();
 
-            cbRole.DataSource = await userAccountDAL.loadRole();
+            if (_ct == null)
+                _ct = new CancellationTokenSource();
+
+            dgvAccount.DataSource = await userAccountDAL.loadDataAsync(_ct.Token);
+
+            cbRole.DataSource = await userAccountDAL.loadRole(_ct.Token);
             cbRole.DisplayMember = "Name";
             cbRole.ValueMember = "ID";
 
@@ -59,7 +64,6 @@ namespace QuanLyThuVien
             txtID.DataBindings.Add("Text", (dgvAccount.DataSource as DataTable), "ID");
             txtUsername.DataBindings.Add("Text", (dgvAccount.DataSource as DataTable), "UserName");
             txtPassword.DataBindings.Add("Text", (dgvAccount.DataSource as DataTable), "Password");
-            //cbRole.DataBindings.Add("Text", (dgvAccount.DataSource as DataTable), "RoleName");
 
             base.bindingData();
         }
@@ -85,6 +89,8 @@ namespace QuanLyThuVien
                 userAccountDAL.insertAccount(txtUsername.Text, txtPassword.Text, Convert.ToInt32(zRoleID), _ct.Token).ContinueWith((t) =>
                 {
                     loadData();
+                    _ct.Dispose();
+                    _ct = null;
                 });
             }
         }
@@ -103,6 +109,8 @@ namespace QuanLyThuVien
                 userAccountDAL.updateAccount(Convert.ToInt32(txtID.Text), txtUsername.Text, txtPassword.Text, Convert.ToInt32(zRoleID), _ct.Token).ContinueWith((t) =>
                 {
                     loadData();
+                    _ct.Dispose();
+                    _ct = null;
                 });
             }
         }
@@ -115,6 +123,8 @@ namespace QuanLyThuVien
             userAccountDAL.deleteAccount(Convert.ToInt32(txtID.Text),_ct.Token).ContinueWith((t) =>
             {
                 loadData();
+                _ct.Dispose();
+                _ct = null;
             });
         }
 

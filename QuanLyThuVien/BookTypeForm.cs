@@ -15,7 +15,7 @@ using System.Windows.Forms;
 
 namespace QuanLyThuVien
 {
-    public partial class BookTypeForm : Form
+    public partial class BookTypeForm : FormBase
     {
         private BookTypeDAL bookTypeDAL;
         private CancellationTokenSource _ct = null;
@@ -23,41 +23,18 @@ namespace QuanLyThuVien
         public BookTypeForm()
         {
             InitializeComponent();
-
-            MainForm.onLanguageChanged += MainForm_onLanguageChanged;
         }
 
-        private void MainForm_onLanguageChanged(object sender, EventArgs e)
-        {
-            applyUIStrings();
-        }
-
-
-        private void BookTypeForm_Load(object sender, EventArgs e)
+        protected override async Task loadData()
         {
             if (bookTypeDAL == null)
                 bookTypeDAL = new BookTypeDAL();
 
-            loadData().ContinueWith((t) =>
-            {
-                if (InvokeRequired)
-                {
-                    Invoke((MethodInvoker)(() =>
-                    {
-                        bindingData();
-                        applyUIStrings();
-                    }));
-                }
-                else
-                {
-                    bindingData();
-                    applyUIStrings();
-                }
-            });
-        }
-        private async Task loadData()
-        {
-            dgvBookType.DataSource = await bookTypeDAL.loadData();
+            if (_ct == null)
+                _ct = new CancellationTokenSource();
+
+            dgvBookType.DataSource = await bookTypeDAL.loadData(_ct.Token);
+            await base.loadData();
         }
 
         private bool checkValid()
@@ -73,17 +50,18 @@ namespace QuanLyThuVien
             //BaseControl.Instance.exportToExcel(dgvBookType);
         }
 
-        private void bindingData()
+        protected override void bindingData()
         {
             txtID.DataBindings.Clear();
             txtName.DataBindings.Clear();
 
             txtID.DataBindings.Add("Text", (dgvBookType.DataSource as DataTable), "Code");
             txtName.DataBindings.Add("Text", (dgvBookType.DataSource as DataTable), "Name");
+            base.bindingData();
         }
 
 
-        private void applyUIStrings()
+        protected override void applyUIStrings()
         {
             lblID.Text = QuanLyThuVien.Resource.lblID;
             lblName.Text = QuanLyThuVien.Resource.lblName;
@@ -93,6 +71,7 @@ namespace QuanLyThuVien
                 dgvBookType.Columns[0].HeaderText = QuanLyThuVien.Resource.lblID;
                 dgvBookType.Columns[1].HeaderText = QuanLyThuVien.Resource.lblName;
             }
+            base.applyUIStrings();
         }
 
 
@@ -144,16 +123,6 @@ namespace QuanLyThuVien
                 _ct.Dispose();
                 _ct = null;
             }
-        }
-
-        private void txtID_Validating(object sender, CancelEventArgs e)
-        {
-
-        }
-
-        private void dgvBookType_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-
         }
     }
 }

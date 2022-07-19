@@ -13,7 +13,7 @@ using System.Windows.Forms;
 
 namespace QuanLyThuVien
 {
-    public partial class BorrowForm : Form
+    public partial class BorrowForm : FormBase
     {
         private BorrowBookDAL borrowBookDAL = null;
         private CancellationTokenSource _ct = null;
@@ -21,41 +21,18 @@ namespace QuanLyThuVien
         public BorrowForm()
         {
             InitializeComponent();
-
-            MainForm.onLanguageChanged += MainForm_onLanguageChanged;
         }
 
-        private void MainForm_onLanguageChanged(object sender, EventArgs e)
-        {
-            applyUIStrings();
-        }
-
-        private void BorrowForm_Load(object sender, EventArgs e)
+        protected override async Task loadData()
         {
             if (borrowBookDAL == null)
                 borrowBookDAL = new BorrowBookDAL();
 
-            loadData().ContinueWith((t) => 
-            {
-                if (InvokeRequired)
-                {
-                    Invoke((MethodInvoker)(() =>
-                    {
-                        bindingData();
-                        applyUIStrings();
-                    }));
-                }
-                else
-                {
-                    bindingData();
-                    applyUIStrings();
-                }
-            });
-        }
+            if (_ct == null)
+                _ct = new CancellationTokenSource();
 
-        private async Task loadData()
-        {
-            dgvBorrow.DataSource = await borrowBookDAL.loadData();
+            dgvBorrow.DataSource = await borrowBookDAL.loadDataAsync(_ct.Token);
+            await base.loadData();
         }
         
         private void btnExcel_Click(object sender, EventArgs e)
@@ -63,7 +40,7 @@ namespace QuanLyThuVien
             //BaseControl.Instance.exportToExcel(dgvBorrow);
         }
 
-        private void bindingData()
+        protected override void bindingData()
         {
             txtID.DataBindings.Clear();
             txtBookID.DataBindings.Clear();
@@ -80,6 +57,8 @@ namespace QuanLyThuVien
             txtTicketDetailsID.DataBindings.Add("Text", (dgvBorrow.DataSource as DataTable), "IDTicket");
             txtAmount.DataBindings.Add("Text", (dgvBorrow.DataSource as DataTable), "Amount");
             dtpReturnDate.DataBindings.Add("Text", (dgvBorrow.DataSource as DataTable), "ReturnDate");
+
+            base.bindingData();
         }
 
         private bool checkValid()
@@ -144,7 +123,7 @@ namespace QuanLyThuVien
 
         }
 
-        private void applyUIStrings()
+        protected override void applyUIStrings()
         {
             lblID.Text = QuanLyThuVien.Resource.lblID;
             lblTicketDetailsID.Text = QuanLyThuVien.Resource.lblTicketDetailsID;
@@ -164,6 +143,8 @@ namespace QuanLyThuVien
                 dgvBorrow.Columns[5].HeaderText = QuanLyThuVien.Resource.lblAmout;
                 dgvBorrow.Columns[6].HeaderText = QuanLyThuVien.Resource.lblReturnDate;
             }
+
+            base.applyUIStrings();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
