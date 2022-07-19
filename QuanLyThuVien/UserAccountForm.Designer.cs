@@ -83,6 +83,7 @@ namespace QuanLyThuVien
             this.dgvAccount.EnableHeadersVisualStyles = false;
             this.dgvAccount.Location = new System.Drawing.Point(3, 67);
             this.dgvAccount.Name = "dgvAccount";
+            this.dgvAccount.ReadOnly = true;
             this.dgvAccount.RowHeadersVisible = false;
             this.dgvAccount.RowHeadersWidth = 51;
             this.dgvAccount.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;

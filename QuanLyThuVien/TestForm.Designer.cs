@@ -47,6 +47,9 @@ namespace QuanLyThuVien
             this.c1FlexGrid1.Size = new System.Drawing.Size(776, 331);
             this.c1FlexGrid1.TabIndex = 0;
             this.c1FlexGrid1.UseCompatibleTextRendering = false;
+            this.c1FlexGrid1.SelChange += new System.EventHandler(this.c1FlexGrid1_SelChange);
+            this.c1FlexGrid1.ValidateEdit += new C1.Win.C1FlexGrid.ValidateEditEventHandler(this.c1FlexGrid1_ValidateEdit);
+            this.c1FlexGrid1.Validating += new System.ComponentModel.CancelEventHandler(this.c1FlexGrid1_Validating);
             // 
             // TestForm
             // 

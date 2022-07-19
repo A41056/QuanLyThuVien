@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -14,23 +15,21 @@ namespace QuanLyThuVien.DAL
 
         protected override string zProceduceName { get => "dbo.LoadAuthor"; }
 
-        public override async Task<DataTable> loadDataAsync()
+        public override async Task<DataTable> loadDataAsync(CancellationToken pCt)
         {
-            return await base.loadDataAsync();
+            return await base.loadDataAsync(pCt);
         }
 
-        public async Task insertAuthorAsync(string pzName, string pzAddress, string pzEmail, string pzPhone, DateTime pDtpBirth, CancellationToken pCt)
+        public async Task insertAsync( string pzName, string pzAddress, string pzEmail, string pzPhone, CancellationToken pCt)
         {
-            string _zQuery = "dbo.InsertAuthor @name , @address , @email , @phone , @birth";
-            await DataProvider.Instance.executeNonQueryAsync(_zQuery, pCt,
-                    new object[] { pzName, pzAddress, pzEmail, pzPhone, pDtpBirth });
+            var _zProceduceName = "dbo.InsertAuthor @name , @address , @email , @phone";
+            await DataProvider.Instance.executeNonQueryAsync(_zProceduceName, pCt, new object[] { pzName, pzAddress, pzEmail, pzPhone });
         }
-
-        public async Task updateAuthorAsync(int id, string pzName, string pzAddress, string pzEmail, string pzPhone, DateTime pDtpBirth, CancellationToken pCt)
+        
+        public async Task updateAsync(int pnID, string pzName, string pzAddress, string pzEmail, string pzPhone, CancellationToken pCt)
         {
-            string _zQuery = "dbo.UpdateAuthor @id , @name , @address , @email , @phone , @birth";
-            await DataProvider.Instance.executeNonQueryAsync(_zQuery, pCt,
-                    new object[] { id, pzName, pzAddress, pzEmail, pzPhone, pDtpBirth });
+            var _zProceduceName = "dbo.UpdateAuthor @id , @name , @address , @email , @phone";
+            await DataProvider.Instance.executeNonQueryAsync(_zProceduceName, pCt, new object[] { pnID, pzName, pzAddress, pzEmail, pzPhone });
         }
     }
 }

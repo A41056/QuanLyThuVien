@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace QuanLyThuVien.DAL
@@ -24,9 +26,25 @@ namespace QuanLyThuVien.DAL
 
         protected virtual string zProceduceName { get; }
 
-        public virtual async Task<DataTable> loadDataAsync()
+        public virtual async Task<DataTable> loadDataAsync(CancellationToken pCt)
         {
-            return await DataProvider.Instance.executeQueryAsync(zProceduceName);
+            Trace.WriteLine(zProceduceName);
+            return await DataProvider.Instance.executeQuerySelectAsync(zProceduceName, pCt);
         }
+
+        //public virtual async Task insertAsync(string pzName, string pzAddress, string pzEmail, string pzPhone, CancellationToken pCt)
+        //{
+        //    await DataProvider.Instance.executeNonQueryAsync(zProceduceName,pCt, new object[] {pzName,pzAddress,pzEmail,pzPhone});
+        //}
+            
+        //public virtual async Task updateAsync( int pnID ,string pzName, string pzAddress, string pzEmail, string pzPhone, CancellationToken pCt)
+        //{
+        //    await DataProvider.Instance.executeNonQueryAsync(zProceduceName, pCt, new object[] {pnID,pzName,pzAddress,pzEmail,pzPhone});
+        //}
+
+        //public virtual async Task deleteAsync( int pnID,CancellationToken pCt)
+        //{
+        //    await DataProvider.Instance.executeNonQueryAsync(zProceduceName,pCt, new object[] { pnID});
+        //}
     }
 }

@@ -16,7 +16,6 @@ namespace QuanLyThuVien
         {
             InitializeComponent();
             MainForm.onLanguageChanged += MainForm_onLanguageChanged;
-
         }
 
         private void MainForm_onLanguageChanged(object sender, EventArgs e)

@@ -77,7 +77,6 @@ namespace QuanLyThuVien
             this.txtID.Name = "txtID";
             this.txtID.Size = new System.Drawing.Size(223, 30);
             this.txtID.TabIndex = 1;
-            this.txtID.Validating += new System.ComponentModel.CancelEventHandler(this.txtID_Validating);
             // 
             // lblID
             // 
@@ -144,6 +143,7 @@ namespace QuanLyThuVien
             this.dgvBookType.Location = new System.Drawing.Point(5, 68);
             this.dgvBookType.Margin = new System.Windows.Forms.Padding(5);
             this.dgvBookType.Name = "dgvBookType";
+            this.dgvBookType.ReadOnly = true;
             this.dgvBookType.RowHeadersVisible = false;
             this.dgvBookType.RowHeadersWidth = 51;
             this.dgvBookType.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
@@ -153,7 +153,6 @@ namespace QuanLyThuVien
             this.dgvBookType.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvBookType.Size = new System.Drawing.Size(1796, 878);
             this.dgvBookType.TabIndex = 52;
-            this.dgvBookType.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dgvBookType_DataError);
             // 
             // childToolStrip
             // 
@@ -221,7 +220,6 @@ namespace QuanLyThuVien
             this.Controls.Add(this.childToolStrip);
             this.Name = "BookTypeForm";
             this.Text = "LoaiSachForm";
-            this.Load += new System.EventHandler(this.BookTypeForm_Load);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvBookType)).EndInit();

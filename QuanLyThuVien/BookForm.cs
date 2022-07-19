@@ -77,7 +77,10 @@ namespace QuanLyThuVien
             btnPrevious.Enabled = false;
             btnNext.Enabled = false;
 
-            var _tb = await _bookDAL.loadDataPagingAsync(pnPageIndex, pnPageSize);
+            if (_ct == null)
+                _ct = new CancellationTokenSource();
+
+            var _tb = await _bookDAL.loadDataPagingAsync(pnPageIndex, pnPageSize, _ct.Token);
             dgvBook.DataSource = _tb;
 
             nTotalRecord = Convert.ToInt32(await _bookDAL.getTotalRecord());
@@ -95,7 +98,7 @@ namespace QuanLyThuVien
             if (_bookTypeDAL == null)
                 _bookTypeDAL = new BookTypeDAL();
 
-            cbBookType.DataSource = await _bookTypeDAL.loadData();
+            cbBookType.DataSource = await _bookTypeDAL.loadData(_ct.Token);
             cbBookType.DisplayMember = "Name";
             cbBookType.ValueMember = "Code";
             
@@ -106,7 +109,7 @@ namespace QuanLyThuVien
             if (_authorDAL == null)
                 _authorDAL = new AuthorDAL();
 
-            cbAuthor.DataSource = await _authorDAL.loadDataAsync();
+            cbAuthor.DataSource = await _authorDAL.loadDataAsync(_ct.Token);
             cbAuthor.DisplayMember = "Name";
             cbAuthor.ValueMember = "ID";
         }
@@ -116,7 +119,7 @@ namespace QuanLyThuVien
             if (_publishDAL == null)
                 _publishDAL = new PublishDAL();
 
-            cbPublisher.DataSource = await _publishDAL.loadData();
+            cbPublisher.DataSource = await _publishDAL.loadDataAsync(_ct.Token);
             cbPublisher.DisplayMember = "Name";
             cbPublisher.ValueMember = "ID";
         }
@@ -138,7 +141,6 @@ namespace QuanLyThuVien
             cbBookType.DataBindings.Add("Text", pDataSource, "Book Type Name", true);
             dtpPublishDate.DataBindings.Add("Text", pDataSource, "PublishDate", false, DataSourceUpdateMode.OnPropertyChanged);
             txtAmout.DataBindings.Add("Text", pDataSource, "Amount", true, DataSourceUpdateMode.OnPropertyChanged);
-
         }
 
         private async Task addNew()
@@ -155,9 +157,9 @@ namespace QuanLyThuVien
                     await _bookDAL.insertBookAsync
                         (_tb.Rows[dgvBook.CurrentCell.RowIndex].Field<string>("Code"),
                         _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<string>("Name"),
-                        _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<int>("Publish ID"),
-                        _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<int>("Author ID"),
-                        _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<string>("Book Type ID"),
+                        Convert.ToInt32(cbPublisher.SelectedValue.ToString()),
+                        Convert.ToInt32(cbAuthor.SelectedValue.ToString()),
+                        cbBookType.SelectedValue.ToString(),
                         _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<DateTime>("PublishDate"),
                         _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<int>("Amount"),
                         _ct.Token);
@@ -273,7 +275,7 @@ namespace QuanLyThuVien
 
         #endregion Methods
 
-        #region Click Event
+        #region Event
         private void cbPublisher_Click(object sender, EventArgs e)
         {
             cbPublisher.DataSource = null;
@@ -338,7 +340,7 @@ namespace QuanLyThuVien
             }
         }
 
-        #endregion Click Event
+        #endregion Event
 
         #region Validating
         private void txtBookID_Validating(object sender, CancelEventArgs e)

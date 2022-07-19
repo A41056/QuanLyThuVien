@@ -14,15 +14,15 @@ namespace QuanLyThuVien.DAL
 
         protected override string zProceduceName => "dbo.LoadBook";
 
-        public override async Task<DataTable> loadDataAsync()
+        public override async Task<DataTable> loadDataAsync(CancellationToken pCt)
         {
-            return await base.loadDataAsync();
+            return await base.loadDataAsync(pCt);
         }
 
-        public async Task<DataTable> loadDataPagingAsync(int pnPageIndex, int pnPageSize)
+        public async Task<DataTable> loadDataPagingAsync(int pnPageIndex, int pnPageSize, CancellationToken pCt)
         {
             string _zQuery = "dbo.LoadBookPaging @PageIndex , @PageSize , null";
-            return await DataProvider.Instance.executeQueryAsync(_zQuery, new object[] { pnPageIndex, pnPageSize });
+            return await DataProvider.Instance.executeQuerySelectAsync(_zQuery,pCt ,new object[] { pnPageIndex, pnPageSize });
         }
 
         public async Task<object> getTotalRecord()

@@ -8,20 +8,21 @@ using System.Threading.Tasks;
 
 namespace QuanLyThuVien.DAL
 {
-    public class UserAccountDAL
+    public class UserAccountDAL : BaseDAL
     {
         public UserAccountDAL() { }
 
-        public async Task<DataTable> loadData()
+        protected override string zProceduceName => "dbo.LoadAccount";
+
+        public override async Task<DataTable> loadDataAsync(CancellationToken pCt)
         {
-            string _zQuery = "dbo.LoadAccount";
-            return await DataProvider.Instance.executeQueryAsync(_zQuery);
+            return await base.loadDataAsync(pCt);
         }
 
-        public async Task<DataTable> loadRole()
+        public async Task<DataTable> loadRole(CancellationToken pCt)
         {
             string _zQuery = "dbo.LoadRole";
-            return await DataProvider.Instance.executeQueryAsync(_zQuery);
+            return await DataProvider.Instance.executeQuerySelectAsync(_zQuery,pCt);
         }
 
         public async Task insertAccount(string pzUsername, string pzPassword, int pnRoleID, CancellationToken pCt)

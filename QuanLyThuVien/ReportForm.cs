@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -15,6 +16,7 @@ namespace QuanLyThuVien
     public partial class ReportForm : Form
     {
         private ReportDAL reportDAL = null;
+        private CancellationTokenSource _ct;
         public ReportForm()
         {
             InitializeComponent();
@@ -37,7 +39,7 @@ namespace QuanLyThuVien
             if (reportDAL == null)
                 reportDAL = new ReportDAL();
 
-            dgvReport.DataSource = reportDAL.getRecordByDate(dtpForm.Value, dtpTo.Value); 
+            dgvReport.DataSource = reportDAL.getRecordByDate(dtpForm.Value, dtpTo.Value, _ct.Token); 
         }
 
         private void btnExcel_Click(object sender, EventArgs e)

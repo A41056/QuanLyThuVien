@@ -111,6 +111,7 @@ namespace QuanLyThuVien
             this.tableLayoutPanel1.SetColumnSpan(this.dgvReport, 3);
             this.dgvReport.Location = new System.Drawing.Point(3, 82);
             this.dgvReport.Name = "dgvReport";
+            this.dgvReport.ReadOnly = true;
             this.dgvReport.RowHeadersVisible = false;
             this.dgvReport.RowHeadersWidth = 51;
             this.dgvReport.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;

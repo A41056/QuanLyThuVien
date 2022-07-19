@@ -58,7 +58,6 @@ namespace QuanLyThuVien
             this.btn10 = new System.Windows.Forms.Button();
             this.btn15 = new System.Windows.Forms.Button();
             this.lblPerpage = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.childToolStrip = new System.Windows.Forms.ToolStrip();
             this.btnNew = new System.Windows.Forms.ToolStripButton();
             this.btnEdit = new System.Windows.Forms.ToolStripButton();
@@ -265,7 +264,6 @@ namespace QuanLyThuVien
             this.panelContainer.Controls.Add(this.lblPublish, 3, 1);
             this.panelContainer.Controls.Add(this.lblAuthor, 4, 1);
             this.panelContainer.Controls.Add(this.PagingNavigation, 1, 5);
-            this.panelContainer.Controls.Add(this.button1, 4, 5);
             this.panelContainer.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContainer.Location = new System.Drawing.Point(0, 0);
             this.panelContainer.Name = "panelContainer";
@@ -359,7 +357,7 @@ namespace QuanLyThuVien
             this.btnPrevious.Location = new System.Drawing.Point(3, 3);
             this.btnPrevious.Name = "btnPrevious";
             this.btnPrevious.Size = new System.Drawing.Size(86, 43);
-            this.btnPrevious.TabIndex = 0;
+            this.btnPrevious.TabIndex = 9;
             this.btnPrevious.Text = "Previous";
             this.btnPrevious.UseVisualStyleBackColor = true;
             this.btnPrevious.Click += new System.EventHandler(this.btnPrevious_Click);
@@ -400,7 +398,7 @@ namespace QuanLyThuVien
             this.btnNext.Location = new System.Drawing.Point(157, 3);
             this.btnNext.Name = "btnNext";
             this.btnNext.Size = new System.Drawing.Size(58, 43);
-            this.btnNext.TabIndex = 2;
+            this.btnNext.TabIndex = 10;
             this.btnNext.Text = "Next";
             this.btnNext.UseVisualStyleBackColor = true;
             this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
@@ -416,7 +414,7 @@ namespace QuanLyThuVien
             this.btn5.Margin = new System.Windows.Forms.Padding(7);
             this.btn5.Name = "btn5";
             this.btn5.Size = new System.Drawing.Size(31, 35);
-            this.btn5.TabIndex = 4;
+            this.btn5.TabIndex = 11;
             this.btn5.Text = "5";
             this.btn5.UseVisualStyleBackColor = true;
             this.btn5.Click += new System.EventHandler(this.btn5_Click);
@@ -432,7 +430,7 @@ namespace QuanLyThuVien
             this.btn10.Margin = new System.Windows.Forms.Padding(7);
             this.btn10.Name = "btn10";
             this.btn10.Size = new System.Drawing.Size(40, 35);
-            this.btn10.TabIndex = 5;
+            this.btn10.TabIndex = 12;
             this.btn10.Text = "10";
             this.btn10.UseVisualStyleBackColor = true;
             this.btn10.Click += new System.EventHandler(this.btn5_Click);
@@ -448,7 +446,7 @@ namespace QuanLyThuVien
             this.btn15.Margin = new System.Windows.Forms.Padding(7);
             this.btn15.Name = "btn15";
             this.btn15.Size = new System.Drawing.Size(40, 35);
-            this.btn15.TabIndex = 6;
+            this.btn15.TabIndex = 13;
             this.btn15.Text = "15";
             this.btn15.UseVisualStyleBackColor = true;
             this.btn15.Click += new System.EventHandler(this.btn5_Click);
@@ -466,16 +464,6 @@ namespace QuanLyThuVien
             this.lblPerpage.TabIndex = 7;
             this.lblPerpage.Text = "Per page";
             this.lblPerpage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(618, 818);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 15;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // childToolStrip
             // 
@@ -593,6 +581,5 @@ namespace QuanLyThuVien
         private System.Windows.Forms.Button btn15;
         private System.Windows.Forms.Label lblPerpage;
         private System.Windows.Forms.DataGridView dgvBook;
-        private System.Windows.Forms.Button button1;
     }
 }
