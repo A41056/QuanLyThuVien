@@ -36,10 +36,23 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="C1.Win.4.5.2, Version=4.5.20221.548, Culture=neutral, PublicKeyToken=944ae1ea0e47ca04" />
+    <Reference Include="C1.DataCollection, Version=1.0.20221.66, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
+      <HintPath>..\packages\C1.DataCollection.1.0.20221.66\lib\netstandard1.1\C1.DataCollection.dll</HintPath>
+    </Reference>
+    <Reference Include="C1.Win.4.5.2, Version=4.5.20221.557, Culture=neutral, PublicKeyToken=944ae1ea0e47ca04, processorArchitecture=MSIL">
+      <HintPath>..\packages\C1.Win.4.5.20221.557\lib\net452\C1.Win.4.5.2.dll</HintPath>
+    </Reference>
     <Reference Include="C1.Win.C1Command.4.5.2, Version=4.5.20221.548, Culture=neutral, PublicKeyToken=e808566f358766d8" />
-    <Reference Include="C1.Win.C1FlexGrid.4.5.2, Version=4.5.20221.548, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
+    <Reference Include="C1.Win.C1FlexGrid.4.5.2, Version=4.5.20221.557, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
+      <HintPath>..\packages\C1.Win.C1FlexGrid.4.5.20221.557\lib\net452\C1.Win.C1FlexGrid.4.5.2.dll</HintPath>
+    </Reference>
+    <Reference Include="C1.Win.C1FlexGrid.RowDetails.4.5.2, Version=4.5.20221.557, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
+      <HintPath>..\packages\C1.Win.C1FlexGrid.RowDetails.4.5.20221.557\lib\net452\C1.Win.C1FlexGrid.RowDetails.4.5.2.dll</HintPath>
+    </Reference>
     <Reference Include="C1.Win.C1Input.4.5.2, Version=4.5.20221.548, Culture=neutral, PublicKeyToken=7e7ff60f0c214f9a, processorArchitecture=MSIL" />
+    <Reference Include="C1.Win.C1InputPanel.4.5.2, Version=4.5.20221.557, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
+      <HintPath>..\packages\C1.Win.C1InputPanel.4.5.20221.557\lib\net452\C1.Win.C1InputPanel.4.5.2.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.AspNetCore.Authentication.Abstractions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Authentication.Abstractions.2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.Abstractions.dll</HintPath>
     </Reference>

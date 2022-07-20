@@ -31,20 +31,5 @@ namespace QuanLyThuVien.DAL
             Trace.WriteLine(zProceduceName);
             return await DataProvider.Instance.executeQuerySelectAsync(zProceduceName, pCt);
         }
-
-        //public virtual async Task insertAsync(string pzName, string pzAddress, string pzEmail, string pzPhone, CancellationToken pCt)
-        //{
-        //    await DataProvider.Instance.executeNonQueryAsync(zProceduceName,pCt, new object[] {pzName,pzAddress,pzEmail,pzPhone});
-        //}
-            
-        //public virtual async Task updateAsync( int pnID ,string pzName, string pzAddress, string pzEmail, string pzPhone, CancellationToken pCt)
-        //{
-        //    await DataProvider.Instance.executeNonQueryAsync(zProceduceName, pCt, new object[] {pnID,pzName,pzAddress,pzEmail,pzPhone});
-        //}
-
-        //public virtual async Task deleteAsync( int pnID,CancellationToken pCt)
-        //{
-        //    await DataProvider.Instance.executeNonQueryAsync(zProceduceName,pCt, new object[] { pnID});
-        //}
     }
 }
