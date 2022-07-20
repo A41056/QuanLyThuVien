@@ -58,6 +58,7 @@ namespace QuanLyThuVien
             this.btn10 = new System.Windows.Forms.Button();
             this.btn15 = new System.Windows.Forms.Button();
             this.lblPerpage = new System.Windows.Forms.Label();
+            this.btnTest = new System.Windows.Forms.Button();
             this.childToolStrip = new System.Windows.Forms.ToolStrip();
             this.btnNew = new System.Windows.Forms.ToolStripButton();
             this.btnEdit = new System.Windows.Forms.ToolStripButton();
@@ -341,6 +342,7 @@ namespace QuanLyThuVien
             this.PagingNavigation.Controls.Add(this.btn10);
             this.PagingNavigation.Controls.Add(this.btn15);
             this.PagingNavigation.Controls.Add(this.lblPerpage);
+            this.PagingNavigation.Controls.Add(this.btnTest);
             this.PagingNavigation.Dock = System.Windows.Forms.DockStyle.Fill;
             this.PagingNavigation.Location = new System.Drawing.Point(3, 818);
             this.PagingNavigation.Name = "PagingNavigation";
@@ -465,6 +467,22 @@ namespace QuanLyThuVien
             this.lblPerpage.Text = "Per page";
             this.lblPerpage.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
+            // btnTest
+            // 
+            this.btnTest.AutoSize = true;
+            this.btnTest.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.btnTest.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnTest.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnTest.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnTest.Location = new System.Drawing.Point(469, 7);
+            this.btnTest.Margin = new System.Windows.Forms.Padding(7);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(51, 35);
+            this.btnTest.TabIndex = 14;
+            this.btnTest.Text = "Test";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            // 
             // childToolStrip
             // 
             this.childToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
@@ -581,5 +599,6 @@ namespace QuanLyThuVien
         private System.Windows.Forms.Button btn15;
         private System.Windows.Forms.Label lblPerpage;
         private System.Windows.Forms.DataGridView dgvBook;
+        private System.Windows.Forms.Button btnTest;
     }
 }

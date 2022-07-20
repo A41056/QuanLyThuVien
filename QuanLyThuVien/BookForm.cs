@@ -25,7 +25,6 @@ namespace QuanLyThuVien
         private AuthorDAL _authorDAL = null;
         private BookTypeDAL _bookTypeDAL = null;
         private PublishDAL _publishDAL = null;
-        private int _nErrorRowIndex;
         private bool _isValidate = false;
         private CancellationTokenSource _ct = null;
 
@@ -48,28 +47,21 @@ namespace QuanLyThuVien
 
             updateControlState();
 
-            try
+            Task.WhenAll(loadData(nPageIndex, nPageSize), loadTypeBook(), loadAuthor(), loadPublishCompany()).ContinueWith((_taskToContinue) =>
             {
-                Task.WhenAll(loadData(nPageIndex, nPageSize), loadTypeBook(), loadAuthor(), loadPublishCompany()).ContinueWith((_taskToContinue) =>
+                if (_taskToContinue.IsFaulted)
                 {
-                    if (_taskToContinue.IsFaulted)
-                    {
-                        MessageBox.Show(QuanLyThuVien.Resource.IsFaulted);
-                    }else if (_taskToContinue.IsCanceled)
-                    {
-                        MessageBox.Show(QuanLyThuVien.Resource.IsCanceled);
-                    }
-                    else
-                    {
-                        if (dgvBook != null)
-                            (dgvBook.DataSource as DataTable).Columns[0].Unique = true;
-                    }
-                });
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.InnerException.Message);
-            }
+                    MessageBox.Show(QuanLyThuVien.Resource.IsFaulted);
+                }
+                else if (_taskToContinue.IsCanceled)
+                {
+                    MessageBox.Show(QuanLyThuVien.Resource.IsCanceled);
+                }
+                else
+                {
+                    return;
+                }
+            });
         }
 
         private async Task loadData(int pnPageIndex, int pnPageSize)
@@ -101,7 +93,6 @@ namespace QuanLyThuVien
             cbBookType.DataSource = await _bookTypeDAL.loadData(_ct.Token);
             cbBookType.DisplayMember = "Name";
             cbBookType.ValueMember = "Code";
-            
         }
 
         private async Task loadAuthor()
@@ -143,9 +134,24 @@ namespace QuanLyThuVien
             txtAmout.DataBindings.Add("Text", pDataSource, "Amount", true, DataSourceUpdateMode.OnPropertyChanged);
         }
 
+        private int getCurrentRow()
+        {
+            var _tb = dgvBook.DataSource as DataTable;
+
+            BindingManagerBase _bm = dgvBook.BindingContext[dgvBook.DataSource];
+
+            DataRow _row = ((DataRowView)_bm.Current).Row;
+
+            int _nRowIndex = _tb.Rows.IndexOf(_row);
+
+            return _nRowIndex;
+        }
+
         private async Task addNew()
         {
             var _tb = dgvBook.DataSource as DataTable;
+            BindingManagerBase _bm = dgvBook.BindingContext[dgvBook.DataSource];
+            DataRow _row = ((DataRowView)_bm.Current).Row;
 
             if (checkValid())
             {
@@ -155,16 +161,16 @@ namespace QuanLyThuVien
                         _ct = new CancellationTokenSource();
                     
                     await _bookDAL.insertBookAsync
-                        (_tb.Rows[dgvBook.CurrentCell.RowIndex].Field<string>("Code"),
-                        _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<string>("Name"),
+                        (_row.Field<string>("Code"),
+                        _row.Field<string>("Name"),
                         Convert.ToInt32(cbPublisher.SelectedValue.ToString()),
                         Convert.ToInt32(cbAuthor.SelectedValue.ToString()),
                         cbBookType.SelectedValue.ToString(),
-                        _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<DateTime>("PublishDate"),
-                        _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<int>("Amount"),
+                        _row.Field<DateTime>("PublishDate"),
+                        _row.Field<int>("Amount"),
                         _ct.Token);
 
-                    nTotalRecord++;
+                    nTotalRecord = Convert.ToInt32(await _bookDAL.getTotalRecord());
 
                     await loadData(nPageIndex, nPageSize);
 
@@ -190,12 +196,12 @@ namespace QuanLyThuVien
                         _ct = new CancellationTokenSource();
 
                     await _bookDAL.updateBookAsync
-                        (_tb.Rows[dgvBook.CurrentCell.RowIndex].Field<string>("Code"),
-                        _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<string>("Name"),
+                        (_tb.Rows[getCurrentRow()].Field<string>("Code"),
+                        _tb.Rows[getCurrentRow()].Field<string>("Name"),
                         Convert.ToInt32(cbPublisher.SelectedValue.ToString()),
                         Convert.ToInt32(cbAuthor.SelectedValue.ToString()),
                         cbBookType.SelectedValue.ToString(),
-                        _tb.Rows[dgvBook.CurrentCell.RowIndex].Field<DateTime>("PublishDate"),
+                        _tb.Rows[getCurrentRow()].Field<DateTime>("PublishDate"),
                         _ct.Token);
                     await loadData(nPageIndex, nPageSize);
 
@@ -218,9 +224,12 @@ namespace QuanLyThuVien
                 if (_ct == null)
                     _ct = new CancellationTokenSource();
 
-                await _bookDAL.deleteBookAsync(_tb.Rows[dgvBook.CurrentCell.RowIndex].Field<string>("Code"), _ct.Token);
-                
-                nTotalRecord--;
+                await _bookDAL.deleteBookAsync(_tb.Rows[getCurrentRow()].Field<string>("Code"), _ct.Token);
+
+                nTotalRecord = Convert.ToInt32(await _bookDAL.getTotalRecord());
+
+                nPageIndex = 1;
+                lblPageIndex.Text = nPageIndex.ToString();
 
                 await loadData(1, nPageSize);
 
@@ -275,7 +284,7 @@ namespace QuanLyThuVien
 
         #endregion Methods
 
-        #region Event
+        #region Click Event
         private void cbPublisher_Click(object sender, EventArgs e)
         {
             cbPublisher.DataSource = null;
@@ -340,45 +349,51 @@ namespace QuanLyThuVien
             }
         }
 
-        #endregion Event
+        #endregion Click Event
 
         #region Validating
         private void txtBookID_Validating(object sender, CancelEventArgs e)
         {
             var _tb = dgvBook.DataSource as DataTable;
-            _tb.PrimaryKey = new DataColumn[] { _tb.Columns["Code"] };
 
-            DataRow _row = _tb.AsEnumerable().Where(x => x.Field<string>("Code") == txtBookID.Text).FirstOrDefault();
+            _tb.PrimaryKey = new DataColumn[] { _tb.Columns["Code"] };
+            _tb.Columns[0].Unique = true;
+
+            BindingManagerBase _bm = dgvBook.BindingContext[dgvBook.DataSource];
+
+            DataRow _row = _tb.Rows.Find(((DataRowView)_bm.Current).Row.ItemArray[1]);
+
+            int _nRowIndex = _tb.Rows.IndexOf(_row);
 
             if (txtBookID.Modified)
             {
-                _nErrorRowIndex = _tb.Rows.IndexOf(_row);
-                
                 if (_row != null)
                 {
                     _isValidate = false;
-                    _tb.Rows[_nErrorRowIndex].SetColumnError("Code", "BookCode must be unique.");
+                    _tb.Rows[_nRowIndex].SetColumnError("Code", "BookCode must be unique.");
                     e.Cancel = true;
+                    _row = null;
                 }
                 else if (string.IsNullOrEmpty(txtBookID.Text.Trim()))
                 {
-                    _nErrorRowIndex = dgvBook.CurrentCell.RowIndex;
-                    _tb.Rows[_nErrorRowIndex].SetColumnError("Code", "BookCode was required.");
+                    _nRowIndex = dgvBook.CurrentCell.RowIndex;
+                    _tb.Rows[_nRowIndex].SetColumnError("Code", "BookCode was required.");
                     _isValidate = false;
                     e.Cancel = true;
                 }
-                else
+                else if (_row == null)
                 {
-                    if (_nErrorRowIndex != -1)
+                    if (_nRowIndex != -1)
                     {
-                        _tb.Rows[_nErrorRowIndex].ClearErrors();
+                        _tb.Rows[_nRowIndex].ClearErrors();
                         _isValidate = true;
                         e.Cancel = false;
                     }
                 }
-
-                updateControlState();
             }
+            updateControlState();
+
+            _tb.Dispose();
         }
 
         private void updateControlState()
@@ -394,7 +409,7 @@ namespace QuanLyThuVien
             if (e.Exception != null && e.Context == DataGridViewDataErrorContexts.Commit)
             {
                 MessageBox.Show("BookCode must be unique");
-                (dgvBook.DataSource as DataTable).Rows[_nErrorRowIndex].ClearErrors();
+                (dgvBook.DataSource as DataTable).Rows[getCurrentRow()].ClearErrors();
             }
         }
 
@@ -467,6 +482,12 @@ namespace QuanLyThuVien
         {
             TestForm testForm = new TestForm();
             testForm.ShowDialog();
+        }
+
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            var _testFrm = new TestForm();
+            _testFrm.ShowDialog();
         }
 
         private void btn5_Click(object sender, EventArgs e)

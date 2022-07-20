@@ -42,20 +42,18 @@ namespace QuanLyThuVien
             this.c1FlexGrid1.ColumnPickerInfo.SearchMode = C1.Win.C1FlexGrid.ColumnPickerSearchMode.None;
             this.c1FlexGrid1.ColumnPickerInfo.ShowColumnMenuItem = false;
             this.c1FlexGrid1.ColumnPickerInfo.ShowToolButton = false;
-            this.c1FlexGrid1.Location = new System.Drawing.Point(12, 12);
+            this.c1FlexGrid1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.c1FlexGrid1.Location = new System.Drawing.Point(0, 0);
             this.c1FlexGrid1.Name = "c1FlexGrid1";
-            this.c1FlexGrid1.Size = new System.Drawing.Size(776, 331);
+            this.c1FlexGrid1.Size = new System.Drawing.Size(1343, 775);
             this.c1FlexGrid1.TabIndex = 0;
             this.c1FlexGrid1.UseCompatibleTextRendering = false;
-            this.c1FlexGrid1.SelChange += new System.EventHandler(this.c1FlexGrid1_SelChange);
-            this.c1FlexGrid1.ValidateEdit += new C1.Win.C1FlexGrid.ValidateEditEventHandler(this.c1FlexGrid1_ValidateEdit);
-            this.c1FlexGrid1.Validating += new System.ComponentModel.CancelEventHandler(this.c1FlexGrid1_Validating);
             // 
             // TestForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1343, 775);
             this.Controls.Add(this.c1FlexGrid1);
             this.Name = "TestForm";
             this.Text = "TestForm";
