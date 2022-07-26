@@ -1,4 +1,5 @@
-﻿using Microsoft.Win32;
+﻿using C1.Win.C1FlexGrid;
+using Microsoft.Win32;
 using QuanLyThuVien.DAL;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GroupDescription = C1.Win.C1FlexGrid.GroupDescription;
 
 namespace QuanLyThuVien
 {
@@ -25,13 +27,16 @@ namespace QuanLyThuVien
         private AuthorDAL _authorDAL = null;
         private BookTypeDAL _bookTypeDAL = null;
         private PublishDAL _publishDAL = null;
-        private bool _isValidate = false;
         private CancellationTokenSource _ct = null;
+        private DataTable _cacheTB = null;
+        private DataTable _displayTB = null;
 
         private int nPageIndex = 1, nPageSize = 10, nTotalRecord = 36;
         private double nPageCount;
+        private CellStyle _cs;
+        private List<GroupDescription> grpDes = new List<GroupDescription>();
+        private GroupDescription grp = null;
         #endregion
-
 
         #region Methods
         public BookForm()
@@ -45,9 +50,10 @@ namespace QuanLyThuVien
             if (_bookDAL == null)
                 _bookDAL = new BookDAL();
 
-            updateControlState();
+            if (_ct == null)
+                _ct = new CancellationTokenSource();
 
-            Task.WhenAll(loadData(nPageIndex, nPageSize), loadTypeBook(), loadAuthor(), loadPublishCompany()).ContinueWith((_taskToContinue) =>
+            Task.WhenAll(loadData(nPageIndex, nPageSize),loadTypeBook(), loadAuthor(), loadPublishCompany()).ContinueWith((_taskToContinue) =>
             {
                 if (_taskToContinue.IsFaulted)
                 {
@@ -59,30 +65,66 @@ namespace QuanLyThuVien
                 }
                 else
                 {
-                    return;
+                    if (InvokeRequired)
+                    {
+                        Invoke((MethodInvoker)(() =>
+                        {
+                            bindingData(dgvBook.DataSource as DataTable);
+                            applyUIStrings();
+                        }));
+                    }
+                    else
+                    {
+                        bindingData(dgvBook.DataSource as DataTable);
+                        applyUIStrings();
+                    }
                 }
             });
+            
+            _cs = dgvBook.Styles.Add("LessThan50");
+            _cs.BackColor = Color.Red;
+
+            btnAccept.Enabled = btnEdit.Enabled = false;
+            btnAccept.Visible = btnDeny.Visible = false;
+            customizeGridView();
+        }
+
+        private void customizeGridView()
+        {
+            dgvBook.AutoSizeCols();
+            dgvBook.AutoSizeRows();
+            dgvBook.AllowEditing = false;
+            dgvBook.AllowFiltering = true;
+            dgvBook.SelectionMode = SelectionModeEnum.Row;
+            dgvBook.ColumnPickerInfo.ShowToolButton = true;
+            dgvBook.DrawMode = DrawModeEnum.OwnerDraw;
+            dgvBook.ColumnContextMenuEnabled = true;
+            dgvBook.Subtotal(AggregateEnum.Sum, 0, 1, 12, "Total amount: {0}");
+
+
+            searchPanel.SetC1FlexGridSearchPanel(dgvBook, searchPanel);
+            searchPanel.HighlightSearchResults = true;
+            searchPanel.SearchMode = C1.Win.C1FlexGrid.SearchMode.Always;
+            searchPanel.Watermark = "Type to search...";
+            searchPanel.SearchDelay = 2;
         }
 
         private async Task loadData(int pnPageIndex, int pnPageSize)
         {
-            btnPrevious.Enabled = false;
-            btnNext.Enabled = false;
+            btnPrevious.Enabled = btnNext.Enabled = false;
 
             if (_ct == null)
                 _ct = new CancellationTokenSource();
 
-            var _tb = await _bookDAL.loadDataPagingAsync(pnPageIndex, pnPageSize, _ct.Token);
+            var _tb = await _bookDAL.loadDataPagingAsync(pnPageIndex, pnPageSize);
+
             dgvBook.DataSource = _tb;
 
+            btnPrevious.Enabled = btnNext.Enabled = true;
+
+            dgvBook.Cols[1].Visible = dgvBook.Cols[4].Visible = dgvBook.Cols[6].Visible = dgvBook.Cols[8].Visible = false;
             nTotalRecord = Convert.ToInt32(await _bookDAL.getTotalRecord());
-
-            btnPrevious.Enabled = true;
-            btnNext.Enabled = true;
-
             pagingCalculation(pnPageSize);
-            bindingData(_tb);
-            applyUIStrings();
         }
 
         private async Task loadTypeBook()
@@ -125,9 +167,9 @@ namespace QuanLyThuVien
             dtpPublishDate.DataBindings.Clear();
             txtAmout.DataBindings.Clear();
 
-            txtBookID.DataBindings.Add("Text", pDataSource, "Code", true, DataSourceUpdateMode.OnValidation);
+            txtBookID.DataBindings.Add("Text", pDataSource, "Code", true, DataSourceUpdateMode.OnPropertyChanged);
             txtBookName.DataBindings.Add("Text", pDataSource, "Name", true);
-            cbAuthor.DataBindings.Add("Text", pDataSource, "Author Name", true);
+            cbAuthor.DataBindings.Add("SelectedValue", pDataSource, "Author ID", true);
             cbPublisher.DataBindings.Add("Text", pDataSource, "Publish Name", true);
             cbBookType.DataBindings.Add("Text", pDataSource, "Book Type Name", true);
             dtpPublishDate.DataBindings.Add("Text", pDataSource, "PublishDate", false, DataSourceUpdateMode.OnPropertyChanged);
@@ -151,6 +193,7 @@ namespace QuanLyThuVien
         {
             var _tb = dgvBook.DataSource as DataTable;
             BindingManagerBase _bm = dgvBook.BindingContext[dgvBook.DataSource];
+            
             DataRow _row = ((DataRowView)_bm.Current).Row;
 
             if (checkValid())
@@ -163,7 +206,7 @@ namespace QuanLyThuVien
                     await _bookDAL.insertBookAsync
                         (_row.Field<string>("Code"),
                         _row.Field<string>("Name"),
-                        Convert.ToInt32(cbPublisher.SelectedValue.ToString()),
+                        _row.Field<int>("Author ID"),
                         Convert.ToInt32(cbAuthor.SelectedValue.ToString()),
                         cbBookType.SelectedValue.ToString(),
                         _row.Field<DateTime>("PublishDate"),
@@ -173,6 +216,7 @@ namespace QuanLyThuVien
                     nTotalRecord = Convert.ToInt32(await _bookDAL.getTotalRecord());
 
                     await loadData(nPageIndex, nPageSize);
+                    await Task.Delay(200);
 
                     _ct.Dispose();
                     _ct = null;
@@ -187,7 +231,9 @@ namespace QuanLyThuVien
         private async Task edit()
         {
             var _tb = dgvBook.DataSource as DataTable;
+            BindingManagerBase _bm = dgvBook.BindingContext[dgvBook.DataSource];
 
+            DataRow _row = ((DataRowView)_bm.Current).Row;
             if (checkValid())
             {
                 try
@@ -196,14 +242,16 @@ namespace QuanLyThuVien
                         _ct = new CancellationTokenSource();
 
                     await _bookDAL.updateBookAsync
-                        (_tb.Rows[getCurrentRow()].Field<string>("Code"),
-                        _tb.Rows[getCurrentRow()].Field<string>("Name"),
+                        (_row.Field<string>("Code"),
+                        _row.Field<string>("Name"),
                         Convert.ToInt32(cbPublisher.SelectedValue.ToString()),
-                        Convert.ToInt32(cbAuthor.SelectedValue.ToString()),
+                        _row.Field<int>("Author ID"),
                         cbBookType.SelectedValue.ToString(),
-                        _tb.Rows[getCurrentRow()].Field<DateTime>("PublishDate"),
+                        _row.Field<DateTime>("PublishDate"),
                         _ct.Token);
+                    
                     await loadData(nPageIndex, nPageSize);
+                    await Task.Delay(200);
 
                     _ct.Dispose();
                     _ct = null;
@@ -263,24 +311,91 @@ namespace QuanLyThuVien
             lblAmount.Text = QuanLyThuVien.Resource.lblAmout;
             btnPrevious.Text = QuanLyThuVien.Resource.btnPrevious;
             btnNext.Text = QuanLyThuVien.Resource.btnNext;
+            lblPerpage.Text = QuanLyThuVien.Resource.PerPage;
 
-            if (dgvBook.Columns.Count > 0)
+            if (dgvBook.Cols.Count > 0)
             {
-                dgvBook.Columns[0].HeaderText = QuanLyThuVien.Resource.lblNumbericalOrder;
-                dgvBook.Columns[1].HeaderText = QuanLyThuVien.Resource.lblBookCode;
-                dgvBook.Columns[2].HeaderText = QuanLyThuVien.Resource.lblBookName;
-                dgvBook.Columns[3].HeaderText = QuanLyThuVien.Resource.lblAuthorID;
-                dgvBook.Columns[4].HeaderText = QuanLyThuVien.Resource.lblAuthorName;
-                dgvBook.Columns[5].HeaderText = QuanLyThuVien.Resource.lblPublishID;
-                dgvBook.Columns[6].HeaderText = QuanLyThuVien.Resource.lblPublishName;
-                dgvBook.Columns[7].HeaderText = QuanLyThuVien.Resource.lblBookTypeID;
-                dgvBook.Columns[8].HeaderText = QuanLyThuVien.Resource.lblBookTypeName;
-                dgvBook.Columns[9].HeaderText = QuanLyThuVien.Resource.lblPublishDate;
-                dgvBook.Columns[10].HeaderText = QuanLyThuVien.Resource.lblInventoryID;
-                dgvBook.Columns[11].HeaderText = QuanLyThuVien.Resource.lblAmout;
+                dgvBook.Cols[1].Caption = QuanLyThuVien.Resource.lblNumbericalOrder;
+                dgvBook.Cols[2].Caption = QuanLyThuVien.Resource.lblBookCode;
+                dgvBook.Cols[3].Caption = QuanLyThuVien.Resource.lblBookName;
+                dgvBook.Cols[4].Caption = QuanLyThuVien.Resource.lblAuthorID;
+                dgvBook.Cols[5].Caption = QuanLyThuVien.Resource.lblAuthorName;
+                dgvBook.Cols[6].Caption = QuanLyThuVien.Resource.lblPublishID;
+                dgvBook.Cols[7].Caption = QuanLyThuVien.Resource.lblPublishName;
+                dgvBook.Cols[8].Caption = QuanLyThuVien.Resource.lblBookTypeID;
+                dgvBook.Cols[9].Caption = QuanLyThuVien.Resource.lblBookTypeName;
+                dgvBook.Cols[10].Caption = QuanLyThuVien.Resource.lblPublishDate;
+                dgvBook.Cols[11].Caption = QuanLyThuVien.Resource.lblInventoryID;
+                dgvBook.Cols[12].Caption = QuanLyThuVien.Resource.lblAmout;
             }
             base.applyUIStrings();
         }
+
+        private void dgvBook_OwnerDrawCell(object sender, OwnerDrawCellEventArgs e)
+        {
+            if ((e.Row >= dgvBook.Rows.Fixed) & (e.Col == (dgvBook.Cols.Fixed - 1))) // Draw Fixed Row Number
+            {
+                e.Text = ((e.Row - dgvBook.Rows.Fixed) + 1).ToString();
+            }
+
+            if (dgvBook.Cols[10].Index == e.Col && e.Row >= dgvBook.Rows.Fixed) // Draw Publish Date Display
+            {
+                if (dgvBook[e.Row, e.Col] != null)
+                    e.Text = "PublishDate: " + dgvBook[e.Row, e.Col].ToString();
+            }
+
+            if (dgvBook.Cols[12].Index == e.Col && e.Row >= dgvBook.Rows.Fixed) //DrawCell on Condition
+            {
+                DataRowView _drv = (DataRowView)dgvBook.Rows[e.Row].DataSource;
+                if (_drv == null) return;
+                DataRow _dr = _drv.Row;
+                
+                if (Convert.ToInt32(_dr.ItemArray[11]) <= 50)
+                {
+                    e.Style = _cs;
+                    dgvBook.Rows[e.Row].Style = e.Style; // Không đúng lắm...
+                    e.DrawCell(DrawCellFlags.Background);
+                    e.DrawCell(DrawCellFlags.Content);
+                    e.Handled = true;
+                }
+            }
+        }
+
+        private void chxPublishID_CheckedChanged(object sender, EventArgs e)
+        {
+            groupByColumn(chxPublishID, "Publish ID");
+        }
+        
+        private void groupByColumn(CheckBox pChx, string pzColumnName)
+        {
+            if (pChx.Checked)
+            {
+                if (grpDes.Find(g => g.PropertyName == pzColumnName) == null)
+                {
+                    grp = new GroupDescription(pzColumnName, ListSortDirection.Descending, true);
+                    grpDes.Add(grp);
+                    grp = null;
+                }
+
+                dgvBook.GroupDescriptions = grpDes;
+                dgvBook.Cols["Amount"].GroupExpression = "=Sum([Amount])";
+            }
+            else
+            {
+                var _found = grpDes.Find(g => g.PropertyName == pzColumnName);
+
+                if (_found != null)
+                    grpDes.Remove(_found);
+
+                dgvBook.GroupDescriptions = grpDes;
+            }
+        }
+
+        private void chxBookTypeCode_CheckedChanged(object sender, EventArgs e)
+        {
+            groupByColumn(chxBookTypeCode, dgvBook.Cols[8].Name);
+        }
+
 
         #endregion Methods
 
@@ -305,7 +420,33 @@ namespace QuanLyThuVien
 
         private void btnNew_Click(object sender, EventArgs e)
         {
-            addNew().ContinueWith(t => loadData(nPageIndex, nPageSize));
+            txtBookName.Text = txtAmout.Text = cbAuthor.Text = cbBookType.Text = cbPublisher.Text = string.Empty;    
+            txtBookID.Focus();
+
+            btnAccept.Visible = btnDeny.Visible = true;
+            btnAccept.Enabled = false;
+        }
+
+        private void btnAccept_Click(object sender, EventArgs e)
+        {
+            addNew().ContinueWith((t) =>
+            {
+                if (t.IsFaulted)
+                    MessageBox.Show(QuanLyThuVien.Resource.IsFaulted);
+                else if (t.IsCanceled)
+                    MessageBox.Show(QuanLyThuVien.Resource.IsCanceled);
+                else
+                    loadData(nPageIndex, nPageSize);
+            });
+            btnEdit.Enabled = false;
+            btnAccept.Enabled = btnEdit.Enabled = false;
+            btnAccept.Visible = btnDeny.Visible = false;
+        }
+
+        private void btnDeny_Click(object sender, EventArgs e)
+        {
+            bindingData();
+            btnAccept.Visible = btnDeny.Visible = false;
         }
 
         private void btnEdit_Click(object sender, EventArgs e)
@@ -317,8 +458,9 @@ namespace QuanLyThuVien
                 else if (t.IsCanceled)
                     MessageBox.Show(QuanLyThuVien.Resource.IsCanceled);
                 else
-                    return;
+                    loadData(nPageIndex, nPageSize);
             });
+            btnEdit.Enabled = false;
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -330,13 +472,27 @@ namespace QuanLyThuVien
                 else if (t.IsCanceled)
                     MessageBox.Show(QuanLyThuVien.Resource.IsCanceled);
                 else
-                    return;
+                    loadData(nPageIndex, nPageSize);
             });
         }
 
         private void btnExcel_Click(object sender, EventArgs e)
         {
             //BaseControl.Instance.exportToExcel(dgvBook);
+        }
+
+        private void btnExport_Click(object sender, EventArgs e)
+        {
+            dgvBook.PrintGrid("BookForm", PrintGridFlags.FitToPageWidth | PrintGridFlags.ShowPreviewDialog, "BookForm\t\t" + String.Format(DateTime.Now.ToString(), "d"), "\t\tPage {0} of {1}");
+            System.Drawing.Printing.PrintDocument pd = dgvBook.PrintParameters.PrintDocument;
+
+            // Set up the page (landscape, 1.5" left margin).
+            pd.DefaultPageSettings.Landscape = true;
+            pd.DefaultPageSettings.Margins.Left = 150;
+
+            // Set up the header and footer fonts.
+            dgvBook.PrintParameters.HeaderFont = new Font("Arial Black", 14, FontStyle.Bold);
+            dgvBook.PrintParameters.FooterFont = new Font("Arial Narrow", 8, FontStyle.Italic);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -367,41 +523,40 @@ namespace QuanLyThuVien
 
             if (txtBookID.Modified)
             {
-                if (_row != null)
-                {
-                    _isValidate = false;
-                    _tb.Rows[_nRowIndex].SetColumnError("Code", "BookCode must be unique.");
-                    e.Cancel = true;
-                    _row = null;
-                }
-                else if (string.IsNullOrEmpty(txtBookID.Text.Trim()))
-                {
-                    _nRowIndex = dgvBook.CurrentCell.RowIndex;
-                    _tb.Rows[_nRowIndex].SetColumnError("Code", "BookCode was required.");
-                    _isValidate = false;
-                    e.Cancel = true;
-                }
-                else if (_row == null)
-                {
-                    if (_nRowIndex != -1)
-                    {
-                        _tb.Rows[_nRowIndex].ClearErrors();
-                        _isValidate = true;
-                        e.Cancel = false;
-                    }
-                }
-            }
-            updateControlState();
+                btnEdit.Enabled = true;
 
-            _tb.Dispose();
+                if (_row !=null)
+                {
+                    _tb.Rows[_nRowIndex].SetColumnError("Code", "BookCode must be unique.");
+                    MessageBox.Show("BookCode must be unique.");
+                    _tb.Rows[_nRowIndex].ClearErrors();
+                    e.Cancel = true;
+                }
+                else if (string.IsNullOrEmpty(txtBookID.Text))
+                {
+                    e.Cancel = true;
+                    MessageBox.Show("BookCode not allow null.");
+                }
+
+                if (string.Compare(txtBookName.Text,string.Empty,false) != 0 && string.Compare(txtAmout.Text,string.Empty,false) != 0)
+                    btnAccept.Enabled = true;
+            }
         }
 
-        private void updateControlState()
+        private void txtAmout_Validating(object sender, CancelEventArgs e)
         {
-            if (_isValidate)
-                btnNew.Enabled = btnEdit.Enabled = true;
-            else
-                btnNew.Enabled = btnEdit.Enabled = false;
+            if (txtAmout.Modified)
+                btnEdit.Enabled = true;
+            if (string.Compare(txtBookName.Text, string.Empty, false) != 0 && string.Compare(txtBookID.Text, string.Empty, false) != 0 && string.Compare(txtAmout.Text, string.Empty, false) != 0)
+                btnAccept.Enabled = true;
+        }
+
+        private void txtBookName_Validating(object sender, CancelEventArgs e)
+        {
+            if (txtBookName.Modified)
+                btnEdit.Enabled = true;
+            if (string.Compare(txtBookName.Text, string.Empty, false) != 0 && string.Compare(txtBookID.Text, string.Empty, false) != 0 && string.Compare(txtAmout.Text, string.Empty, false) != 0)
+                btnAccept.Enabled = true;
         }
 
         private void dgvBook_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -412,40 +567,6 @@ namespace QuanLyThuVien
                 (dgvBook.DataSource as DataTable).Rows[getCurrentRow()].ClearErrors();
             }
         }
-
-        private void txtBookName_Validating(object sender, CancelEventArgs e)
-        {
-            if (txtBookName.Modified)
-            {
-                if (string.IsNullOrEmpty(txtBookName.Text))
-                {
-                    _isValidate = false;
-                    updateControlState();
-                }
-                else
-                {
-                    _isValidate = true;
-                    updateControlState();
-                }
-            }
-        }
-
-        private void txtAmout_Validating(object sender, CancelEventArgs e)
-        {
-            if (txtAmout.Modified)
-            {
-                if (string.IsNullOrEmpty(txtAmout.Text) || !int.TryParse(txtAmout.Text, out int _sdt))
-                {
-                    _isValidate = false;
-                    updateControlState();
-                }
-                else
-                {
-                    _isValidate = true;
-                    updateControlState();
-                }
-            }
-        }
         
         #endregion Validating
 
@@ -453,41 +574,57 @@ namespace QuanLyThuVien
         private void btnPrevious_Click(object sender, EventArgs e)
         {
             if (nPageIndex == 1)
-            { 
                 return;
-            }
             else
-            {
-                nPageIndex--;
-                pagingCalculation(nPageSize);
-                loadData(nPageIndex, nPageSize);
-            }
+                cacheAndDisplay(--nPageIndex);
         }
             
         private void btnNext_Click(object sender, EventArgs e)
         {
             if (nPageIndex >= nPageCount)
-            {
                 return;
+            else
+                cacheAndDisplay(++nPageIndex);
+        }
+
+        private void cacheAndDisplay(int pnPageIndex)
+        {
+            if (!chxCacheData.Checked)
+            {
+                if (dgvBook.GroupDescriptions != null)
+                    dgvBook.GroupDescriptions.Clear();
+                chxBookTypeCode.Checked = chxPublishID.Checked = false;
+                pagingCalculation(nPageSize);
+                loadData(pnPageIndex, nPageSize);
             }
             else
             {
-                nPageIndex++;
+                if (dgvBook.GroupDescriptions != null)
+                    dgvBook.GroupDescriptions.Clear();
+                chxBookTypeCode.Checked = chxPublishID.Checked = false;
+
+                _cacheTB = dgvBook.DataSource as DataTable;
+
                 pagingCalculation(nPageSize);
-                loadData(nPageIndex, nPageSize);
+                loadData(pnPageIndex, nPageSize).ContinueWith((t) =>
+                {
+                    if (t.IsCompleted)
+                    {
+                        if (InvokeRequired)
+                        {
+                            Invoke((MethodInvoker)(() =>
+                            {
+                                _displayTB = dgvBook.DataSource as DataTable;
+                                dgvBook.Cols[1].Visible = dgvBook.Cols[4].Visible = dgvBook.Cols[6].Visible = dgvBook.Cols[8].Visible = false;
+                                _displayTB.Merge(_cacheTB);
+                                _displayTB.DefaultView.Sort = "RowNumber ASC";
+                                dgvBook.DataSource = _displayTB;
+                                dgvBook.Refresh();
+                            }));
+                        }
+                    }
+                });
             }
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            TestForm testForm = new TestForm();
-            testForm.ShowDialog();
-        }
-
-        private void btnTest_Click(object sender, EventArgs e)
-        {
-            var _testFrm = new TestForm();
-            _testFrm.ShowDialog();
         }
 
         private void btn5_Click(object sender, EventArgs e)

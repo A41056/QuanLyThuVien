@@ -31,18 +31,28 @@ namespace QuanLyThuVien
         {
             loadData().ContinueWith((t) => 
             {
-                if (InvokeRequired)
+                if (t.IsFaulted)
                 {
-                    Invoke((MethodInvoker)(() =>
-                    {
-                        bindingData();
-                        applyUIStrings();
-                    }));
+                    MessageBox.Show(QuanLyThuVien.Resource.IsFaulted);
+                }else if (t.IsCanceled)
+                {
+                    MessageBox.Show(QuanLyThuVien.Resource.IsCanceled);
                 }
                 else
                 {
-                    bindingData();
-                    applyUIStrings();
+                    if (InvokeRequired)
+                    {
+                        Invoke((MethodInvoker)(() =>
+                        {
+                            bindingData();
+                            applyUIStrings();
+                        }));
+                    }
+                    else
+                    {
+                        bindingData();
+                        applyUIStrings();
+                    }
                 }
             });
         }
