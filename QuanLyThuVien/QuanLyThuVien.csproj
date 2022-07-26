@@ -46,12 +46,18 @@
     <Reference Include="C1.Win.C1FlexGrid.4.5.2, Version=4.5.20221.557, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
       <HintPath>..\packages\C1.Win.C1FlexGrid.4.5.20221.557\lib\net452\C1.Win.C1FlexGrid.4.5.2.dll</HintPath>
     </Reference>
+    <Reference Include="C1.Win.C1FlexGrid.Classic.4.5.2, Version=4.5.20221.548, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
+    <Reference Include="C1.Win.C1FlexGrid.GroupPanel.4.5.2, Version=4.5.20221.548, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
     <Reference Include="C1.Win.C1FlexGrid.RowDetails.4.5.2, Version=4.5.20221.557, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
       <HintPath>..\packages\C1.Win.C1FlexGrid.RowDetails.4.5.20221.557\lib\net452\C1.Win.C1FlexGrid.RowDetails.4.5.2.dll</HintPath>
     </Reference>
+    <Reference Include="C1.Win.C1FlexGrid.SearchPanel.4.5.2, Version=4.5.20221.548, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
     <Reference Include="C1.Win.C1Input.4.5.2, Version=4.5.20221.548, Culture=neutral, PublicKeyToken=7e7ff60f0c214f9a, processorArchitecture=MSIL" />
     <Reference Include="C1.Win.C1InputPanel.4.5.2, Version=4.5.20221.557, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
       <HintPath>..\packages\C1.Win.C1InputPanel.4.5.20221.557\lib\net452\C1.Win.C1InputPanel.4.5.2.dll</HintPath>
+    </Reference>
+    <Reference Include="C1.Win.ExpressionEditor.4.5.2, Version=4.5.20221.557, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
+      <HintPath>..\packages\C1.Win.ExpressionEditor.4.5.20221.557\lib\net452\C1.Win.ExpressionEditor.4.5.2.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.AspNetCore.Authentication.Abstractions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Authentication.Abstractions.2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.Abstractions.dll</HintPath>
@@ -275,12 +281,6 @@
       <DependentUpon>Resource.vi.resx</DependentUpon>
     </Compile>
     <Compile Include="DataProvider.cs" />
-    <Compile Include="TestForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="TestForm.Designer.cs">
-      <DependentUpon>TestForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="UserAccountForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -333,9 +333,6 @@
     <EmbeddedResource Include="Resource.vi.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.vi.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="TestForm.resx">
-      <DependentUpon>TestForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UserAccountForm.resx">
       <DependentUpon>UserAccountForm.cs</DependentUpon>
@@ -445,6 +442,8 @@
     <Content Include="NationalFlags\comi.png" />
     <None Include="Resources\user2.png" />
     <None Include="Resources\add1.png" />
+    <None Include="Resources\accept.png" />
+    <None Include="Resources\anhdb.jpg" />
     <Content Include="Resources\author.png" />
     <None Include="Resources\author2.png" />
     <Content Include="Resources\book-stack.png" />
@@ -458,11 +457,13 @@
     <Content Include="Resources\delete.png" />
     <None Include="Resources\delete2.png" />
     <None Include="Resources\delete3.png" />
+    <None Include="Resources\deny.png" />
     <Content Include="Resources\edit.png" />
     <None Include="Resources\edit2.png" />
     <Content Include="Resources\export.png" />
     <None Include="Resources\export2.png" />
     <None Include="Resources\language1.png" />
+    <None Include="Resources\filter.png" />
     <Content Include="Resources\library.png" />
     <None Include="Resources\loginBg2.png" />
     <None Include="Resources\loginBg21.png" />
@@ -472,6 +473,7 @@
     <Content Include="Resources\man.png" />
     <None Include="Resources\open-book2.png" />
     <Content Include="Resources\plus.png" />
+    <None Include="Resources\printer.png" />
     <Content Include="Resources\publisher.png" />
     <None Include="Resources\reader1.png" />
     <None Include="Resources\quocky.png" />

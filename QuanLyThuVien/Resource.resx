@@ -312,6 +312,12 @@
   <data name="OutOfStock" xml:space="preserve">
     <value>Out of Stock</value>
   </data>
+  <data name="PerPage" xml:space="preserve">
+    <value>Per Page</value>
+  </data>
+  <data name="PublishDateColumn" xml:space="preserve">
+    <value>Publish Date: </value>
+  </data>
   <data name="RoleID" xml:space="preserve">
     <value>Role ID</value>
   </data>

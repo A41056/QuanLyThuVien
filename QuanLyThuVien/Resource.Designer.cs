@@ -646,6 +646,24 @@ namespace QuanLyThuVien {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Per Page.
+        /// </summary>
+        internal static string PerPage {
+            get {
+                return ResourceManager.GetString("PerPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Publish Date: .
+        /// </summary>
+        internal static string PublishDateColumn {
+            get {
+                return ResourceManager.GetString("PublishDateColumn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Role ID.
         /// </summary>
         internal static string RoleID {

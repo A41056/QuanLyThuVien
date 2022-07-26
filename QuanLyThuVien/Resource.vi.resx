@@ -309,6 +309,12 @@
   <data name="OutOfStock" xml:space="preserve">
     <value>Hết hàng!</value>
   </data>
+  <data name="PerPage" xml:space="preserve">
+    <value>mỗi trang</value>
+  </data>
+  <data name="PublishDateColumn" xml:space="preserve">
+    <value>Ngày xuất bản: </value>
+  </data>
   <data name="RoleID" xml:space="preserve">
     <value>Mã quyền</value>
   </data>

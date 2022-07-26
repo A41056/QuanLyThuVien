@@ -19,10 +19,10 @@ namespace QuanLyThuVien.DAL
             return await base.loadDataAsync(pCt);
         }
 
-        public async Task<DataTable> loadDataPagingAsync(int pnPageIndex, int pnPageSize, CancellationToken pCt)
+        public async Task<DataTable> loadDataPagingAsync(int pnPageIndex, int pnPageSize)
         {
             string _zQuery = "dbo.LoadBookPaging @PageIndex , @PageSize , null";
-            return await DataProvider.Instance.executeQuerySelectAsync(_zQuery,pCt ,new object[] { pnPageIndex, pnPageSize });
+            return await DataProvider.Instance.executeQueryAsync(_zQuery ,new object[] { pnPageIndex, pnPageSize });
         }
 
         public async Task<object> getTotalRecord()

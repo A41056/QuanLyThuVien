@@ -28,7 +28,38 @@ namespace QuanLyThuVien
 
         private const string SqlConnection = @"Data Source=DESKTOP-P2A4PIM\SQLEXPRESS;Initial Catalog=LibraryManagement;Integrated Security=True;Connection Timeout=30";
 
+        public async Task<DataTable> executeQueryAsync(string pzQuery, object[] pParameter = null)
+        {
+            DataTable _data = null;
 
+            using (SqlConnection _connection = new SqlConnection(SqlConnection))
+            using (SqlCommand _cmd = _connection.CreateCommand())
+            {
+                _cmd.CommandText = pzQuery;
+                await _cmd.Connection.OpenAsync();
+
+                try
+                {
+                    addParameter(pzQuery, pParameter, _cmd);
+                    SqlDataAdapter _adapter = new SqlDataAdapter(_cmd);
+                    try
+                    {
+                        _data = new DataTable();
+                        await Task.Run(() => _adapter.Fill(_data));
+                    }
+                    finally
+                    {
+                        _adapter.Dispose();
+                    }
+                }
+                finally
+                {
+                    if (_cmd.Connection != null && _cmd.Connection.State != ConnectionState.Closed)
+                        _cmd.Connection.Close();
+                }
+            }
+            return _data;
+        }
         public async Task<DataTable> executeQuerySelectAsync(string pzQuery,CancellationToken pCt ,object[] pParameter = null)
         {
             DataTable _data = null;
