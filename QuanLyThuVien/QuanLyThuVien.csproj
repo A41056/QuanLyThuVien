@@ -35,30 +35,10 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>online-library.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="C1.DataCollection, Version=1.0.20221.66, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
-      <HintPath>..\packages\C1.DataCollection.1.0.20221.66\lib\netstandard1.1\C1.DataCollection.dll</HintPath>
-    </Reference>
-    <Reference Include="C1.Win.4.5.2, Version=4.5.20221.557, Culture=neutral, PublicKeyToken=944ae1ea0e47ca04, processorArchitecture=MSIL">
-      <HintPath>..\packages\C1.Win.4.5.20221.557\lib\net452\C1.Win.4.5.2.dll</HintPath>
-    </Reference>
-    <Reference Include="C1.Win.C1Command.4.5.2, Version=4.5.20221.548, Culture=neutral, PublicKeyToken=e808566f358766d8" />
-    <Reference Include="C1.Win.C1FlexGrid.4.5.2, Version=4.5.20221.557, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
-      <HintPath>..\packages\C1.Win.C1FlexGrid.4.5.20221.557\lib\net452\C1.Win.C1FlexGrid.4.5.2.dll</HintPath>
-    </Reference>
-    <Reference Include="C1.Win.C1FlexGrid.Classic.4.5.2, Version=4.5.20221.548, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
-    <Reference Include="C1.Win.C1FlexGrid.GroupPanel.4.5.2, Version=4.5.20221.548, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
-    <Reference Include="C1.Win.C1FlexGrid.RowDetails.4.5.2, Version=4.5.20221.557, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
-      <HintPath>..\packages\C1.Win.C1FlexGrid.RowDetails.4.5.20221.557\lib\net452\C1.Win.C1FlexGrid.RowDetails.4.5.2.dll</HintPath>
-    </Reference>
-    <Reference Include="C1.Win.C1FlexGrid.SearchPanel.4.5.2, Version=4.5.20221.548, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL" />
-    <Reference Include="C1.Win.C1Input.4.5.2, Version=4.5.20221.548, Culture=neutral, PublicKeyToken=7e7ff60f0c214f9a, processorArchitecture=MSIL" />
-    <Reference Include="C1.Win.C1InputPanel.4.5.2, Version=4.5.20221.557, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
-      <HintPath>..\packages\C1.Win.C1InputPanel.4.5.20221.557\lib\net452\C1.Win.C1InputPanel.4.5.2.dll</HintPath>
-    </Reference>
-    <Reference Include="C1.Win.ExpressionEditor.4.5.2, Version=4.5.20221.557, Culture=neutral, PublicKeyToken=79882d576c6336da, processorArchitecture=MSIL">
-      <HintPath>..\packages\C1.Win.ExpressionEditor.4.5.20221.557\lib\net452\C1.Win.ExpressionEditor.4.5.2.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNetCore.Authentication.Abstractions, Version=2.2.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNetCore.Authentication.Abstractions.2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Authentication.Abstractions.dll</HintPath>
     </Reference>
@@ -296,7 +276,6 @@
     <EmbeddedResource Include="FormBase.resx">
       <DependentUpon>FormBase.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\licenses.licx" />
     <EmbeddedResource Include="ReaderForm.resx">
       <DependentUpon>ReaderForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -362,35 +341,6 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
-    <COMReference Include="Microsoft.Office.Core">
-      <Guid>{2DF8D04C-5BFA-101B-BDE5-00AA0044DE52}</Guid>
-      <VersionMajor>2</VersionMajor>
-      <VersionMinor>7</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="Microsoft.Office.Interop.Excel">
-      <Guid>{00020813-0000-0000-C000-000000000046}</Guid>
-      <VersionMajor>1</VersionMajor>
-      <VersionMinor>8</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-    <COMReference Include="VBIDE">
-      <Guid>{0002E157-0000-0000-C000-000000000046}</Guid>
-      <VersionMajor>5</VersionMajor>
-      <VersionMinor>3</VersionMinor>
-      <Lcid>0</Lcid>
-      <WrapperTool>primary</WrapperTool>
-      <Isolated>False</Isolated>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
-    </COMReference>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\borrow1.png" />
   </ItemGroup>
   <ItemGroup>
@@ -444,6 +394,7 @@
     <None Include="Resources\add1.png" />
     <None Include="Resources\accept.png" />
     <None Include="Resources\anhdb.jpg" />
+    <Content Include="online-library.ico" />
     <Content Include="Resources\author.png" />
     <None Include="Resources\author2.png" />
     <Content Include="Resources\book-stack.png" />

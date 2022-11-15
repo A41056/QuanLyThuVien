@@ -19,7 +19,7 @@ namespace QuanLyThuVien {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resource {
@@ -228,6 +228,42 @@ namespace QuanLyThuVien {
         internal static string CantLogin {
             get {
                 return ResourceManager.GetString("CantLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group by Author.
+        /// </summary>
+        internal static string chxAuthor {
+            get {
+                return ResourceManager.GetString("chxAuthor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group by BookType Code.
+        /// </summary>
+        internal static string chxBookTypeCode {
+            get {
+                return ResourceManager.GetString("chxBookTypeCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cache Data.
+        /// </summary>
+        internal static string chxCacheData {
+            get {
+                return ResourceManager.GetString("chxCacheData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Group by PublishID.
+        /// </summary>
+        internal static string chxPublishID {
+            get {
+                return ResourceManager.GetString("chxPublishID", resourceCulture);
             }
         }
         
@@ -624,6 +660,15 @@ namespace QuanLyThuVien {
         internal static string LogoutNotification {
             get {
                 return ResourceManager.GetString("LogoutNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Merge Cell.
+        /// </summary>
+        internal static string MergeCell {
+            get {
+                return ResourceManager.GetString("MergeCell", resourceCulture);
             }
         }
         

@@ -108,7 +108,7 @@ namespace QuanLyThuVien
         private void LoginForm_Load(object sender, EventArgs e)
         {
             updateControlStates();
-            cbxFlags.SelectedIndex = 0;
+            cbxFlags.SelectedIndex = 1;
         }
 
         private void txtUserName_TextChanged(object sender, EventArgs e)

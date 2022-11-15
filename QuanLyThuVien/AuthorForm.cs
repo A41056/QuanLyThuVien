@@ -43,7 +43,7 @@ namespace QuanLyThuVien
             if (_authorDAL == null)
                 _authorDAL = new AuthorDAL();
 
-            dgvAuthor.DataSource = await _authorDAL.loadDataAsync(_ct.Token);
+            dgvAuthor.DataSource = await _authorDAL.loadDataAsync( _ct.Token);
             
             await base.loadData();
         }

@@ -13,6 +13,7 @@ namespace QuanLyThuVien
 {
     public sealed class DataProvider
     {
+
         private static DataProvider _instance = null;
 
         public static DataProvider Instance
@@ -24,172 +25,39 @@ namespace QuanLyThuVien
             }
         }
 
-        public DataProvider() { }
+        public DataProvider() 
+        {}
 
-        private const string SqlConnection = @"Data Source=DESKTOP-P2A4PIM\SQLEXPRESS;Initial Catalog=LibraryManagement;Integrated Security=True;Connection Timeout=30";
+        private const string SqlConnection = @"Data Source=QUANGGIAP\SQLEXPRESS;Initial Catalog=LibraryManagement;Integrated Security=True";
 
-        public async Task<DataTable> executeQueryAsync(string pzQuery, object[] pParameter = null)
-        {
-            DataTable _data = null;
-
-            using (SqlConnection _connection = new SqlConnection(SqlConnection))
-            using (SqlCommand _cmd = _connection.CreateCommand())
-            {
-                _cmd.CommandText = pzQuery;
-                await _cmd.Connection.OpenAsync();
-
-                try
-                {
-                    addParameter(pzQuery, pParameter, _cmd);
-                    SqlDataAdapter _adapter = new SqlDataAdapter(_cmd);
-                    try
-                    {
-                        _data = new DataTable();
-                        await Task.Run(() => _adapter.Fill(_data));
-                    }
-                    finally
-                    {
-                        _adapter.Dispose();
-                    }
-                }
-                finally
-                {
-                    if (_cmd.Connection != null && _cmd.Connection.State != ConnectionState.Closed)
-                        _cmd.Connection.Close();
-                }
-            }
-            return _data;
-        }
         public async Task<DataTable> executeQuerySelectAsync(string pzQuery,CancellationToken pCt ,object[] pParameter = null)
         {
-            DataTable _data = null;
-
             using (SqlConnection _connection = new SqlConnection(SqlConnection))
             using (SqlCommand _cmd = _connection.CreateCommand())
             {
                 _cmd.CommandText = pzQuery;
                 await _cmd.Connection.OpenAsync(pCt);
 
-                try
+                using (DataTable _data = new DataTable())
                 {
-                    addParameter(pzQuery, pParameter, _cmd);
-                    SqlDataAdapter _adapter = new SqlDataAdapter(_cmd);
                     try
                     {
-                        _data = new DataTable();
-                        await Task.Run(() => _adapter.Fill(_data));
+                        addParameter(pzQuery, pParameter, _cmd);
+
+                        using (var _dataReader = await _cmd.ExecuteReaderAsync(pCt))
+                        {
+                            if (_dataReader.HasRows)
+                                _data.Load(_dataReader);
+                        }
                     }
                     finally
                     {
-                        _adapter.Dispose();
+                        if (_cmd.Connection != null && _cmd.Connection.State != ConnectionState.Closed)
+                            _cmd.Connection.Close();
                     }
-                }
-                finally
-                {
-                    if (_cmd.Connection != null && _cmd.Connection.State != ConnectionState.Closed)
-                        _cmd.Connection.Close();
+                    return _data;
                 }
             }
-            return _data;
-        }
-
-        public async Task<int> executeNonQueryInsertAsync(string pzQuery,CancellationToken pCt ,object[] pParameter = null)
-        {
-            int _data = 0;
-
-            using (SqlConnection _connection = new SqlConnection(SqlConnection))
-            using (SqlCommand _cmd = _connection.CreateCommand())
-            {
-                _cmd.CommandText = pzQuery;
-                await _cmd.Connection.OpenAsync(pCt);
-                
-                try
-                {
-                    ///
-                    addParameter(pzQuery, pParameter, _cmd);
-                    SqlDataAdapter _adapter = new SqlDataAdapter(_cmd);
-                    try
-                    {
-                        _data = await _adapter.InsertCommand.ExecuteNonQueryAsync(pCt);
-                    }
-                    finally
-                    {
-                        _adapter.Dispose();
-                    }
-                }
-                finally
-                {
-                    if (_cmd.Connection != null && _cmd.Connection.State != ConnectionState.Closed)
-                        _cmd.Connection.Close();
-                }
-            }
-            return _data;
-        }
-
-        public async Task<int> executeNonQueryUpdateAsync(string pzQuery, CancellationToken pCt, object[] pParameter = null)
-        {
-            int _data = 0;
-
-            using (SqlConnection _connection = new SqlConnection(SqlConnection))
-            using (SqlCommand _cmd = _connection.CreateCommand())
-            {
-                _cmd.CommandText = pzQuery;
-                await _cmd.Connection.OpenAsync(pCt);
-
-                try
-                {
-                    ///
-                    addParameter(pzQuery, pParameter, _cmd);
-                    SqlDataAdapter _adapter = new SqlDataAdapter(_cmd);
-                    try
-                    {
-                        _data = await _adapter.UpdateCommand.ExecuteNonQueryAsync(pCt);
-                    }
-                    finally
-                    {
-                        _adapter.Dispose();
-                    }
-                }
-                finally
-                {
-                    if (_cmd.Connection != null && _cmd.Connection.State != ConnectionState.Closed)
-                        _cmd.Connection.Close();
-                }
-            }
-            return _data;
-        }
-
-        public async Task<int> executeNonQueryDeleteAsync(string pzQuery, CancellationToken pCt, object[] pParameter = null)
-        {
-            int _data = 0;
-
-            using (SqlConnection _connection = new SqlConnection(SqlConnection))
-            using (SqlCommand _cmd = _connection.CreateCommand())
-            {
-                _cmd.CommandText = pzQuery;
-                await _cmd.Connection.OpenAsync(pCt);
-
-                try
-                {
-                    ///
-                    addParameter(pzQuery, pParameter, _cmd);
-                    SqlDataAdapter _adapter = new SqlDataAdapter(_cmd);
-                    try
-                    {
-                        _data = await _adapter.DeleteCommand.ExecuteNonQueryAsync(pCt);
-                    }
-                    finally
-                    {
-                        _adapter.Dispose();
-                    }
-                }
-                finally
-                {
-                    if (_cmd.Connection != null && _cmd.Connection.State != ConnectionState.Closed)
-                        _cmd.Connection.Close();
-                }
-            }
-            return _data;
         }
 
         public async Task<bool> executeQueryAsync(string pzQuery, CancellationToken pCancellationToken, object[] pParameter = null)

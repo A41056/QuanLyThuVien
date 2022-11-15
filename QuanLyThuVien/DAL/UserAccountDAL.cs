@@ -14,7 +14,7 @@ namespace QuanLyThuVien.DAL
 
         protected override string zProceduceName => "dbo.LoadAccount";
 
-        public override async Task<DataTable> loadDataAsync(CancellationToken pCt)
+        public override async Task<DataTable> loadDataAsync( CancellationToken pCt)
         {
             return await base.loadDataAsync(pCt);
         }

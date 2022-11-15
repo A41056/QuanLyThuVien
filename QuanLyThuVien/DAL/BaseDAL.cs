@@ -28,8 +28,7 @@ namespace QuanLyThuVien.DAL
 
         public virtual async Task<DataTable> loadDataAsync(CancellationToken pCt)
         {
-            Trace.WriteLine(zProceduceName);
-            return await DataProvider.Instance.executeQuerySelectAsync(zProceduceName, pCt);
+            return await DataProvider.Instance.executeQuerySelectAsync(zProceduceName,pCt);
         }
     }
 }

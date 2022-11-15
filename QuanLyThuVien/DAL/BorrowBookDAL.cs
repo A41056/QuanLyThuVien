@@ -19,6 +19,12 @@ namespace QuanLyThuVien.DAL
             return await base.loadDataAsync(pCt);
         }
 
+        public async Task<DataTable> loadBorrowBookByCode(string pzBookCode, CancellationToken pCt)
+        {
+            string _zQuery = "dbo.LoadBorrowBookByCode @BookCode";
+            return await DataProvider.Instance.executeQuerySelectAsync(_zQuery,pCt, new object[] { pzBookCode });
+        }
+
         public async Task insertBorrowBook(string pzBookCode,int pnIDAuthor, int pnIDReader, int pnAmount, DateTime pdtpBorrowDate, DateTime pdtpReturnDate, CancellationToken pCt)
         {
             string _zQuery = "dbo.InsertBorrowBook @BookCode , @IDAuthor , @IDReader , @Amount , @BorrowDate , @ReturnDate";
